@@ -665,7 +665,7 @@ export function Sidebar() {
           </button>
         </div>
         <div className="mt-1 px-2 text-ios-caption text-gray-400">
-          Дані в браузері · автобекап раз на 7 днів
+          Дані лише в цьому браузері · нагадування про копію раз на 7 днів
         </div>
       </div>
     </aside>

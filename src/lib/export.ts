@@ -1,5 +1,5 @@
-import { format, parseISO } from "date-fns";
-import { Project, Tag, Task } from "../types";
+import { addDays, format, parseISO } from "date-fns";
+import type { Project, Tag, Task } from "../types";
 
 function escapeCsv(s: string): string {
   if (s.includes(",") || s.includes('"') || s.includes("\n")) {
@@ -57,15 +57,36 @@ function icalDate(iso: string): string {
   return format(parseISO(iso), "yyyyMMdd");
 }
 
+function icalEndDate(iso: string): string {
+  return format(addDays(parseISO(iso), 1), "yyyyMMdd");
+}
+
+function icalTimestamp(date: Date): string {
+  return date
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}/, "");
+}
+
+function escapeIcalText(value: string): string {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\r?\n/g, "\\n")
+    .replace(/,/g, "\\,")
+    .replace(/;/g, "\\;");
+}
+
 /** Експорт дедлайнів у iCal для Google Calendar / Apple Calendar. */
 export function tasksToIcal(tasks: Task[], projects: Project[]): string {
   const projectMap = new Map(projects.map((p) => [p.id, p.name]));
   const dated = tasks.filter((t) => t.dueDate);
+  const timestamp = icalTimestamp(new Date());
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
     "PRODID:-//Flow//UK",
     "CALSCALE:GREGORIAN",
+    "X-WR-CALNAME:Flow",
   ];
   for (const t of dated) {
     const proj = t.projectId ? projectMap.get(t.projectId) : "";
@@ -73,10 +94,15 @@ export function tasksToIcal(tasks: Task[], projects: Project[]): string {
     lines.push(
       "BEGIN:VEVENT",
       `UID:${t.id}@flow`,
+      `DTSTAMP:${timestamp}`,
       `DTSTART;VALUE=DATE:${icalDate(t.dueDate!)}`,
-      `DTEND;VALUE=DATE:${icalDate(t.dueDate!)}`,
-      `SUMMARY:${summary.replace(/[,;\\]/g, "")}`,
-      `STATUS:${t.status === "done" ? "COMPLETED" : "NEEDS-ACTION"}`,
+      `DTEND;VALUE=DATE:${icalEndDate(t.dueDate!)}`,
+      `SUMMARY:${escapeIcalText(summary)}`,
+      `DESCRIPTION:${escapeIcalText(
+        t.status === "done" ? "Статус: виконано" : "Статус: активна задача"
+      )}`,
+      "STATUS:CONFIRMED",
+      "TRANSP:TRANSPARENT",
       "END:VEVENT"
     );
   }

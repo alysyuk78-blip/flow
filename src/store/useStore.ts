@@ -33,6 +33,45 @@ import { TASK_TEMPLATES } from "./taskTemplates";
 import { todayISO } from "../lib/dates";
 import { wouldCreateCycle } from "../lib/dependencies";
 
+const PERSIST_KEY = "flow-store-v2";
+const RECOVERY_NOTICE_KEY = "flow-storage-recovered";
+
+function quarantineCorruptStore(): void {
+  if (typeof window === "undefined") return;
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(PERSIST_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as { state?: unknown };
+    if (!parsed || typeof parsed !== "object" || !parsed.state) {
+      throw new Error("Invalid persisted state");
+    }
+    const state = parsed.state as Record<string, unknown>;
+    if (
+      !Array.isArray(state.projects) ||
+      !Array.isArray(state.tasks) ||
+      !Array.isArray(state.tags)
+    ) {
+      throw new Error("Invalid persisted collections");
+    }
+  } catch {
+    if (!raw) return;
+    try {
+      localStorage.setItem(`${PERSIST_KEY}-corrupt-${Date.now()}`, raw);
+    } catch {
+      // The original entry still needs to be removed so the app can start.
+    }
+    try {
+      localStorage.removeItem(PERSIST_KEY);
+      sessionStorage.setItem(RECOVERY_NOTICE_KEY, "1");
+    } catch {
+      // Storage may be unavailable in strict privacy modes.
+    }
+  }
+}
+
+quarantineCorruptStore();
+
 function shift(days: number): string {
   return format(addDays(parseISO(todayISO()), days), "yyyy-MM-dd");
 }
@@ -895,7 +934,7 @@ export const useStore = create<State>()(
       },
     }),
     {
-      name: "flow-store-v2",
+      name: PERSIST_KEY,
       version: 4,
       migrate: (persisted: unknown) => {
         const s = persisted as State;

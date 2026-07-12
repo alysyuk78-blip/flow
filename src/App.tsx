@@ -6,8 +6,9 @@ import { HelpModal } from "./components/HelpModal";
 import { UndoToast } from "./components/UndoToast";
 import { FocusMode } from "./components/FocusMode";
 import { BulkActionBar } from "./components/BulkActionBar";
+import { DataSafetyNotice } from "./components/DataSafetyNotice";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
-import { useReminders, useAutoBackup } from "./hooks/useReminders";
+import { useReminders } from "./hooks/useReminders";
 
 const TaskDetail = lazy(() =>
   import("./components/TaskDetail").then((module) => ({
@@ -91,7 +92,6 @@ export default function App() {
 
   useKeyboardShortcuts();
   useReminders();
-  useAutoBackup();
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -187,6 +187,7 @@ export default function App() {
         </>
       )}
 
+      <DataSafetyNotice />
       <UndoToast />
       <FocusMode />
       <HelpModal />
