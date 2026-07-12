@@ -89,11 +89,11 @@ export default function App() {
   return (
     <div className="app-shell flex w-full overflow-hidden bg-white text-gray-900 transition-colors duration-250 dark:bg-gray-950 dark:text-gray-100">
       {/* Мобільний заголовок */}
-      <div className="mobile-header safe-x fixed left-0 right-0 top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white px-4 dark:border-gray-800 dark:bg-gray-950 md:hidden">
+      <div className="mobile-header safe-x fixed left-0 right-0 top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:hidden">
         <button
           onClick={() => setSidebarOpen(true)}
           aria-label="Відкрити меню"
-          className="touch-target -ml-2 flex items-center justify-center rounded-lg text-gray-600 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="touch-target flex shrink-0 items-center justify-center rounded-lg text-gray-600 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <Menu className="h-5 w-5" />
         </button>

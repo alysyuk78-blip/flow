@@ -46,7 +46,7 @@ export function QuickAdd({
   return (
     <div>
       <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
-        <Plus className="h-4 w-4 text-gray-400" />
+        <Plus className="h-4 w-4 shrink-0 text-gray-400" />
         <input
           autoFocus={autoFocus}
           value={title}
@@ -60,7 +60,7 @@ export function QuickAdd({
           }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder={placeholder}
-          className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
         />
         {showTemplates && (
           <button
@@ -74,7 +74,7 @@ export function QuickAdd({
       {hint && (
         <p className="mt-1 px-1 text-[11px] text-brand-500">{hint}</p>
       )}
-      <p className="mt-0.5 px-1 text-[10px] text-gray-400">
+      <p className="mt-0.5 hidden px-1 text-[10px] text-gray-400 sm:block">
         Приклад: Зустріч завтра !високий #робота @офіс 30хв
       </p>
       {templatesOpen && (

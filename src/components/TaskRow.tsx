@@ -92,33 +92,34 @@ export function TaskRow({
         </span>
       </button>
 
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span
-            className={clsx(
-              "truncate text-sm",
-              done
-                ? "text-gray-400 line-through"
-                : "text-gray-800 dark:text-gray-100"
-            )}
-          >
-            {task.title}
-          </span>
+      <div className="min-w-0 flex-1 overflow-hidden">
+        <p
+          className={clsx(
+            "truncate text-sm leading-snug",
+            done
+              ? "text-gray-400 line-through"
+              : "text-gray-800 dark:text-gray-100"
+          )}
+        >
+          {task.title}
+        </p>
+
+        <div className="mt-1 flex flex-wrap items-center gap-1.5">
           <PriorityFlag priority={task.priority} />
           {task.kind === "milestone" && (
-            <Diamond className="h-3 w-3 text-amber-500" strokeWidth={1.5} />
+            <Diamond className="h-3 w-3 shrink-0 text-amber-500" strokeWidth={1.5} />
           )}
           {task.recurrence !== "none" && (
-            <Repeat className="h-3 w-3 text-gray-400" strokeWidth={1.5} />
+            <Repeat className="h-3 w-3 shrink-0 text-gray-400" strokeWidth={1.5} />
           )}
           {task.isMyDay && !done && (
-            <Sun className="h-3 w-3 text-amber-500" strokeWidth={1.5} />
+            <Sun className="h-3 w-3 shrink-0 text-amber-500" strokeWidth={1.5} />
           )}
           {task.waitingFor && (
-            <Hourglass className="h-3 w-3 text-orange-400" strokeWidth={1.5} />
+            <Hourglass className="h-3 w-3 shrink-0 text-orange-400" strokeWidth={1.5} />
           )}
           {task.streakCount > 0 && (
-            <span className="inline-flex items-center gap-0.5 text-[10px] text-orange-500">
+            <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-orange-500">
               <Flame className="h-3 w-3" />
               {task.streakCount}
             </span>
@@ -133,10 +134,10 @@ export function TaskRow({
               }}
               title="Мій день"
               className={clsx(
-                "shrink-0 rounded p-0.5",
+                "shrink-0 rounded p-1",
                 task.isMyDay
                   ? "text-amber-500"
-                  : "text-gray-300 opacity-0 group-hover:opacity-100 hover:text-amber-500"
+                  : "text-gray-300 hover:text-amber-500 md:opacity-0 md:group-hover:opacity-100"
               )}
             >
               <Sun className="h-3.5 w-3.5" />
@@ -152,16 +153,16 @@ export function TaskRow({
               className="inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-3.5 w-3.5" />
-              Фокус
+              <span className="hidden min-[400px]:inline">Фокус</span>
             </button>
           )}
         </div>
 
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
           {showProject && project && (
-            <span className="inline-flex items-center gap-1">
-              <Folder className="h-3 w-3" strokeWidth={1.5} />
-              {project.name}
+            <span className="inline-flex max-w-full items-center gap-1 truncate">
+              <Folder className="h-3 w-3 shrink-0" strokeWidth={1.5} />
+              <span className="truncate">{project.name}</span>
             </span>
           )}
           {task.dueDate && (
@@ -184,7 +185,9 @@ export function TaskRow({
             </span>
           )}
           {task.waitingFor && (
-            <span className="text-orange-500">→ {task.waitingFor}</span>
+            <span className="max-w-full truncate text-orange-500">
+              → {task.waitingFor}
+            </span>
           )}
           {task.subtasks.length > 0 && (
             <span className="inline-flex items-center gap-1">

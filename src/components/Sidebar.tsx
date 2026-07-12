@@ -481,13 +481,16 @@ export function Sidebar() {
               (t) => t.projectId === project.id && t.status !== "done"
             ).length;
             nodes.push(
-              <div key={project.id} className="group relative">
+              <div
+                key={project.id}
+                className="group flex items-center gap-0.5 px-1"
+              >
                 <button
                   onClick={() =>
                     select({ kind: "project", projectId: project.id })
                   }
                   className={clsx(
-                    "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm transition-all duration-200 ease-smooth",
+                    "flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 text-sm transition-all duration-200 ease-smooth",
                     active
                       ? "bg-brand-500 text-white"
                       : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800",
@@ -495,13 +498,13 @@ export function Sidebar() {
                   )}
                 >
                   <Folder className="h-4 w-4 shrink-0" strokeWidth={1.5} />
-                  <span className="flex-1 truncate text-left">
+                  <span className="min-w-0 flex-1 truncate text-left">
                     {project.name}
                   </span>
                   {open > 0 && (
                     <span
                       className={clsx(
-                        "rounded-full px-1.5 text-xs",
+                        "shrink-0 rounded-full px-1.5 text-xs",
                         active
                           ? "bg-white/20"
                           : "bg-gray-200 text-gray-500 dark:bg-gray-800"
@@ -511,7 +514,7 @@ export function Sidebar() {
                     </span>
                   )}
                 </button>
-                <div className="absolute right-1 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 group-hover:flex">
+                <div className="flex shrink-0 items-center gap-0.5 max-md:hidden md:opacity-0 md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100">
                   <button
                     onClick={() =>
                       project.archived

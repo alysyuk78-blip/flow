@@ -72,11 +72,11 @@ export function TaskDetail() {
 
   return (
     <div className="flex h-full w-full shrink-0 flex-col border-l border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 md:w-[380px]">
-      <div className="flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-        <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+      <div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 dark:border-gray-800 xs:px-4">
+        <span className="truncate text-xs font-semibold uppercase tracking-wide text-gray-400">
           {task.kind === "milestone" ? "Віха" : "Деталі задачі"}
         </span>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           {task.status !== "done" && (
             <button
               onClick={() => setFocusTaskId(task.id)}
@@ -84,7 +84,7 @@ export function TaskDetail() {
               className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-400 hover:bg-brand-50 hover:text-brand-500 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-4 w-4" />
-              Фокус
+              <span className="hidden min-[400px]:inline">Фокус</span>
             </button>
           )}
           <button
@@ -124,7 +124,7 @@ export function TaskDetail() {
             value={task.title}
             onChange={(e) => updateTask(task.id, { title: e.target.value })}
             rows={1}
-            className="flex-1 resize-none bg-transparent text-lg font-semibold text-gray-800 outline-none dark:text-gray-100"
+            className="min-w-0 flex-1 resize-none break-words bg-transparent text-lg font-semibold text-gray-800 outline-none dark:text-gray-100"
           />
         </div>
 

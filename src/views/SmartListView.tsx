@@ -155,13 +155,13 @@ export function SmartListView({ list }: { list: SmartList }) {
 
   return (
     <div className="page-container">
-      <div className="mb-5 flex items-center gap-3">
-        {meta.icon}
-        <div>
+      <div className="mb-5 flex min-w-0 items-start gap-3">
+        <div className="shrink-0">{meta.icon}</div>
+        <div className="min-w-0 flex-1">
           <h1 className="text-xl font-bold text-gray-800 xs:text-2xl dark:text-gray-100">
             {meta.title}
           </h1>
-          <p className="text-sm text-gray-500">{meta.hint}</p>
+          <p className="text-sm leading-snug text-gray-500">{meta.hint}</p>
         </div>
       </div>
 
@@ -174,10 +174,10 @@ export function SmartListView({ list }: { list: SmartList }) {
             projectId={null}
             dueToday={list === "today"}
             addToMyDay={list === "myDay"}
-            placeholder={
+          placeholder={
               list === "myDay"
                 ? "Головна задача дня…"
-                : "Додати задачу… (завтра, #тег, @офіс, 30хв)"
+                : "Додати задачу…"
             }
             autoFocus={quickAddOpen && list === "inbox"}
             showTemplates

@@ -35,8 +35,8 @@ export function ListView({ projectId }: { projectId: string }) {
   return (
     <div className="page-container">
       <BulkActionBar />
-      <div className="mb-4 flex items-center gap-2">
-        <div className="flex-1">
+      <div className="mb-4 flex min-w-0 items-center gap-2">
+        <div className="min-w-0 flex-1">
           <QuickAdd projectId={projectId} placeholder="Додати задачу в проєкт…" />
         </div>
         <button
