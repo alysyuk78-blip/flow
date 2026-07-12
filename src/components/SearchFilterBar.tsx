@@ -71,7 +71,7 @@ export function SearchFilterBar() {
       {active && (
         <button
           onClick={clearSearchFilters}
-          className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-ios-footnote text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <X className="h-3 w-3" /> Скинути
         </button>
@@ -96,7 +96,7 @@ function FilterSelect({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       title={label}
-      className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-800"
+      className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-ios-footnote dark:border-gray-700 dark:bg-gray-800"
     >
       {options.map((o) => (
         <option key={o.value} value={o.value}>

@@ -185,7 +185,7 @@ export function SmartListView({ list }: { list: SmartList }) {
           {quickAddOpen && list === "inbox" && (
             <button
               onClick={() => setQuickAddOpen(false)}
-              className="mt-1 text-xs text-gray-400 hover:text-gray-600"
+              className="mt-1 text-ios-footnote text-gray-400 hover:text-gray-600"
             >
               Esc — закрити
             </button>
@@ -249,9 +249,9 @@ function EmptyState({ list }: { list: SmartList }) {
     waiting: "У деталях задачі вкажіть «Очікування від»",
   };
   return (
-    <div className="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 dark:border-gray-700">
+    <div className="rounded-lg border border-dashed border-gray-200 py-16 text-center text-gray-400 dark:border-gray-700">
       <CircleCheckBig className="mx-auto h-10 w-10" strokeWidth={1} />
-      <p className="mt-3 text-sm">
+      <p className="mt-3 ios-empty">
         {hints[list] ?? "Тут поки порожньо. Гарна робота!"}
       </p>
     </div>

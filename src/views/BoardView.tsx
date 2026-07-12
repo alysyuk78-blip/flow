@@ -84,15 +84,15 @@ function Column({
     <div
       ref={setNodeRef}
       className={clsx(
-        "flex w-72 shrink-0 flex-col rounded-2xl bg-gray-100 p-3 dark:bg-gray-800/60",
+        "flex w-72 shrink-0 flex-col rounded-lg bg-gray-100 p-3 dark:bg-gray-800/60",
         isOver && "ring-2 ring-brand-400"
       )}
     >
       <div className="mb-2 flex items-center justify-between px-1">
-        <span className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+        <span className="text-ios-body font-semibold text-gray-700 dark:text-gray-200">
           {STATUS_LABELS[status]}
         </span>
-        <span className="rounded-full bg-gray-200 px-2 text-xs text-gray-500 dark:bg-gray-700">
+        <span className="ios-list-count rounded-full bg-gray-200 px-2 dark:bg-gray-700">
           {tasks.length}
         </span>
       </div>
@@ -152,18 +152,18 @@ function Card({ task, overlay }: { task: Task; overlay?: boolean }) {
   return (
     <div
       className={clsx(
-        "cursor-grab rounded-xl border border-gray-200 bg-white p-3 shadow-sm active:cursor-grabbing dark:border-gray-700 dark:bg-gray-900",
+        "cursor-grab rounded-lg border border-gray-200 bg-white p-3 shadow-sm active:cursor-grabbing dark:border-gray-700 dark:bg-gray-900",
         overlay && "rotate-3 shadow-lg"
       )}
     >
       <div className="flex items-start gap-2">
-        <span className="flex-1 text-sm text-gray-800 dark:text-gray-100">
+        <span className="flex-1 text-ios-body text-gray-800 dark:text-gray-100">
           {task.title}
         </span>
         <PriorityFlag priority={task.priority} />
       </div>
       {(task.dueDate || taskTags.length > 0) && (
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-gray-500">
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-ios-footnote text-gray-500">
           {task.dueDate && (
             <span
               className={clsx(

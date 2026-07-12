@@ -29,10 +29,10 @@ export function MatrixView() {
       <div className="mb-6 flex items-center gap-3">
         <LayoutGrid className="h-7 w-7 text-brand-500" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h1 className="ios-page-title">
             Матриця Ейзенхауера
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="ios-page-subtitle">
             Важливо vs терміново — позначте в деталях задачі або покладайтесь на
             дедлайн і пріоритет
           </p>
@@ -46,22 +46,22 @@ export function MatrixView() {
           return (
             <div
               key={q}
-              className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
+              className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900"
               style={{ borderTopColor: meta.color, borderTopWidth: 3 }}
             >
               <div className="mb-3">
                 <h2
-                  className="text-sm font-bold"
+                  className="text-ios-body font-bold"
                   style={{ color: meta.color }}
                 >
                   {meta.title}
                 </h2>
-                <p className="text-xs text-gray-400">{meta.hint}</p>
-                <span className="text-xs text-gray-400">{items.length} задач</span>
+                <p className="text-ios-footnote text-gray-400">{meta.hint}</p>
+                <span className="ios-list-count">{items.length} задач</span>
               </div>
               <div className="max-h-64 space-y-1 overflow-y-auto">
                 {items.length === 0 ? (
-                  <p className="py-4 text-center text-xs text-gray-400">
+                  <p className="py-4 text-center text-ios-footnote text-gray-400">
                     Порожньо
                   </p>
                 ) : (
@@ -74,7 +74,7 @@ export function MatrixView() {
                             e.stopPropagation();
                             updateTask(task.id, { important: !task.important });
                           }}
-                          className="rounded bg-white/90 px-1 text-[10px] shadow dark:bg-gray-800"
+                          className="rounded bg-white/90 px-1 text-ios-caption shadow dark:bg-gray-800"
                           title="Важливо"
                         >
                           {task.important ? "★" : "☆"}
@@ -84,7 +84,7 @@ export function MatrixView() {
                             e.stopPropagation();
                             updateTask(task.id, { urgent: !task.urgent });
                           }}
-                          className="rounded bg-white/90 px-1 text-[10px] shadow dark:bg-gray-800"
+                          className="rounded bg-white/90 px-1 text-ios-caption shadow dark:bg-gray-800"
                           title="Терміново"
                         >
                           {task.urgent ? "!" : "·"}

@@ -50,7 +50,7 @@ export function TaskRow({
     <div
       onClick={() => openTask(task.id)}
       className={clsx(
-        "group flex cursor-pointer items-start gap-2 rounded-xl border px-2.5 py-3 transition-all duration-200 ease-smooth xs:gap-3 xs:px-3 xs:py-2.5",
+        "group flex cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-3 transition-all duration-200 ease-smooth xs:gap-3 xs:px-3 xs:py-2.5",
         selectedTaskId === task.id || bulkSelected
           ? "border-brand-300 bg-brand-50 dark:border-brand-500/40 dark:bg-brand-500/10"
           : "border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/60"
@@ -119,7 +119,7 @@ export function TaskRow({
             <Hourglass className="h-3 w-3 shrink-0 text-orange-400" strokeWidth={1.5} />
           )}
           {task.streakCount > 0 && (
-            <span className="inline-flex shrink-0 items-center gap-0.5 text-[10px] text-orange-500">
+            <span className="inline-flex shrink-0 items-center gap-0.5 text-ios-caption text-orange-500">
               <Flame className="h-3 w-3" />
               {task.streakCount}
             </span>
@@ -150,7 +150,7 @@ export function TaskRow({
                 setFocusTaskId(task.id);
               }}
               title="Режим фокусу — таймер 25 хв"
-              className="inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
+              className="inline-flex shrink-0 items-center gap-0.5 rounded-lg px-1.5 py-0.5 text-ios-caption font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-3.5 w-3.5" />
               <span className="hidden min-[400px]:inline">Фокус</span>

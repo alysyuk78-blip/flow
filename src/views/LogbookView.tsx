@@ -22,24 +22,24 @@ export function LogbookView() {
       <div className="mb-5 flex items-center gap-3">
         <Archive className="h-6 w-6 text-gray-400" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h1 className="ios-page-title">
             Журнал
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="ios-page-subtitle">
             Виконані задачі · {items.length}
           </p>
         </div>
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-sm text-gray-400 dark:border-gray-700">
+        <div className="rounded-lg border border-dashed border-gray-200 py-16 text-center ios-empty dark:border-gray-700">
           Поки нічого не виконано.
         </div>
       ) : (
         <div className="space-y-5">
           {Array.from(grouped.entries()).map(([label, group]) => (
             <div key={label}>
-              <div className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <div className="mb-1 px-3 ios-section-label">
                 {label}
               </div>
               <div className="space-y-0.5">

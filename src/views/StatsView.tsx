@@ -36,34 +36,34 @@ export function StatsView() {
       <div className="mb-5 flex items-center gap-3">
         <BarChart3 className="h-6 w-6 text-brand-500" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h1 className="ios-page-title">
             Статистика
           </h1>
-          <p className="text-sm text-gray-500">Останні 7 днів</p>
+          <p className="ios-page-subtitle">Останні 7 днів</p>
         </div>
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-3xl font-bold text-brand-500">{stats.total}</div>
-          <div className="text-sm text-gray-500">Виконано за тиждень</div>
+          <div className="ios-page-subtitle">Виконано за тиждень</div>
         </div>
-        <div className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
+        <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
           <div className="text-3xl font-bold text-gray-800 dark:text-gray-100">
             {stats.active}
           </div>
-          <div className="text-sm text-gray-500">Активних задач</div>
+          <div className="ios-page-subtitle">Активних задач</div>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-200 p-5 dark:border-gray-700">
-        <h2 className="mb-4 text-sm font-semibold text-gray-600 dark:text-gray-300">
+      <div className="rounded-lg border border-gray-200 p-5 dark:border-gray-700">
+        <h2 className="mb-4 text-ios-body font-semibold text-gray-600 dark:text-gray-300">
           Виконано по днях
         </h2>
         <div className="flex items-end justify-between gap-2" style={{ height: 160 }}>
           {stats.days.map((d) => (
             <div key={d.iso} className="flex flex-1 flex-col items-center gap-1">
-              <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+              <span className="text-ios-footnote font-medium text-gray-600 dark:text-gray-300">
                 {d.count || ""}
               </span>
               <div
@@ -72,7 +72,7 @@ export function StatsView() {
                   height: `${Math.max((d.count / stats.max) * 120, d.count ? 8 : 2)}px`,
                 }}
               />
-              <span className="text-[10px] capitalize text-gray-400">
+              <span className="text-ios-caption capitalize text-gray-400">
                 {d.label}
               </span>
             </div>

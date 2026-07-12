@@ -93,17 +93,17 @@ export function WeeklyReviewView() {
       <div className="mb-6 flex items-center gap-3">
         <ClipboardList className="h-7 w-7 text-brand-500" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h1 className="ios-page-title">
             Щотижневий огляд
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="ios-page-subtitle">
             GTD-ритуал: розібрати, оновити, спланувати (15–30 хв)
           </p>
         </div>
       </div>
 
       {lastReview && (
-        <p className="mb-4 text-xs text-gray-400">
+        <p className="mb-4 text-ios-footnote text-gray-400">
           Останній огляд:{" "}
           {new Date(lastReview).toLocaleDateString("uk-UA", {
             day: "numeric",
@@ -144,7 +144,7 @@ export function WeeklyReviewView() {
           return (
             <div
               key={step.id}
-              className="flex items-start gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800/60"
+              className="flex items-start gap-3 rounded-lg border border-gray-200 bg-white px-4 py-3 dark:border-gray-700 dark:bg-gray-800/60"
             >
               <button
                 onClick={() => toggleStep(step.id)}
@@ -162,22 +162,22 @@ export function WeeklyReviewView() {
                     {step.label}
                   </span>
                   {count != null && count > 0 && (
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-ios-footnote text-amber-700 dark:bg-amber-500/20 dark:text-amber-300">
                       {count}
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-gray-500">{step.hint}</p>
+                <p className="text-ios-footnote text-gray-500">{step.hint}</p>
                 {step.nav && (
                   <button
                     onClick={() => select(step.nav!)}
-                    className="mt-1 text-xs text-brand-500 hover:underline"
+                    className="mt-1 text-ios-footnote text-brand-500 hover:underline"
                   >
                     Перейти →
                   </button>
                 )}
                 {step.id === "projects" && stats.staleProjectCount > 0 && (
-                  <p className="mt-1 flex items-center gap-1 text-xs text-gray-400">
+                  <p className="mt-1 flex items-center gap-1 text-ios-footnote text-gray-400">
                     <FolderOpen className="h-3 w-3" />
                     {stats.staleProjectCount} проєкт(ів) без руху
                   </p>
@@ -191,7 +191,7 @@ export function WeeklyReviewView() {
       <button
         onClick={finishReview}
         disabled={completedSteps < 3}
-        className="mt-6 w-full rounded-xl bg-brand-500 py-3 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-40"
+        className="mt-6 w-full rounded-lg bg-brand-500 py-3 text-ios-body font-medium text-white hover:bg-brand-600 disabled:opacity-40"
       >
         Завершити огляд ({completedSteps}/{STEPS.length})
       </button>
@@ -209,12 +209,12 @@ function StatCard({
   value: number;
 }) {
   return (
-    <div className="rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-800/60">
-      <div className="flex items-center gap-1.5 text-xs text-gray-500">
+    <div className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-800/60">
+      <div className="flex items-center gap-1.5 text-ios-footnote text-gray-500">
         {icon}
         {label}
       </div>
-      <div className="text-xl font-bold text-gray-800 dark:text-gray-100">
+      <div className="ios-page-title">
         {value}
       </div>
     </div>

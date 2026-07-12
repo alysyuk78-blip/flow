@@ -20,7 +20,7 @@ export function FilterBar() {
     filters.tagId !== "any";
 
   const sel =
-    "rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs outline-none dark:border-gray-700 dark:bg-gray-800";
+    "rounded-lg border border-gray-200 bg-white px-2 py-1 text-ios-footnote outline-none dark:border-gray-700 dark:bg-gray-800";
 
   return (
     <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -70,7 +70,7 @@ export function FilterBar() {
       {active && (
         <button
           onClick={clearFilters}
-          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-ios-footnote text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <X className="h-3 w-3" /> Скинути
         </button>

@@ -45,7 +45,7 @@ export function QuickAdd({
 
   return (
     <div>
-      <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
         <Plus className="h-4 w-4 shrink-0 text-gray-400" />
         <input
           autoFocus={autoFocus}
@@ -72,9 +72,9 @@ export function QuickAdd({
         )}
       </div>
       {hint && (
-        <p className="mt-1 px-1 text-[11px] text-brand-500">{hint}</p>
+        <p className="mt-1 px-1 text-ios-caption text-brand-500">{hint}</p>
       )}
-      <p className="mt-0.5 hidden px-1 text-[10px] text-gray-400 sm:block">
+      <p className="mt-0.5 hidden px-1 text-ios-caption text-gray-400 sm:block">
         Приклад: Зустріч завтра !високий #робота @офіс 30хв
       </p>
       {templatesOpen && (
@@ -90,7 +90,7 @@ export function QuickAdd({
                 });
                 setTemplatesOpen(false);
               }}
-              className="block w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="block w-full rounded-lg px-2 py-1.5 text-left text-ios-footnote hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <span className="font-medium text-gray-800 dark:text-gray-100">
                 {tpl.name}

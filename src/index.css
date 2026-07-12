@@ -6,6 +6,7 @@
   color-scheme: light dark;
   --mobile-header-h: 3rem;
   --page-gutter: 1rem;
+  --radius-flow: 0.5rem; /* = rounded-lg, як у кнопок меню */
 }
 
 @media (min-width: 375px) {
@@ -106,6 +107,27 @@ body {
     @apply text-ios-footnote leading-snug text-gray-500;
   }
 
+  .ios-form-label {
+    @apply text-ios-footnote text-gray-500;
+  }
+
+  .ios-form-control {
+    @apply text-ios-body;
+  }
+
+  .ios-empty {
+    @apply text-ios-footnote text-gray-400;
+  }
+
+  .ios-tag {
+    @apply text-ios-footnote font-medium;
+  }
+
+  /* Єдиний радіус блоків = кнопки (rounded-lg) */
+  .ios-card {
+    @apply overflow-hidden rounded-lg;
+  }
+
   /* Контейнер сторінки: iPhone SE → Pro Max */
   .page-container {
     @apply mx-auto w-full max-w-3xl py-5 sm:py-8;
@@ -126,12 +148,12 @@ body {
   }
 }
 
-/* iOS: не збільшувати при фокусі на поле (якщо font < 16px) */
+/* iOS: не збільшувати при фокусі на поле */
 @media (max-width: 767px) {
   input,
   select,
   textarea {
-    font-size: 16px;
+    font-size: 17px;
   }
 }
 

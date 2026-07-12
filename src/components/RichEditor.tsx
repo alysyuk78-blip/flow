@@ -38,7 +38,7 @@ export function RichEditor({
     editorProps: {
       attributes: {
         class:
-          "prose-sm max-w-none text-sm text-gray-800 dark:text-gray-100 leading-relaxed",
+          "prose-sm max-w-none text-ios-body text-gray-800 dark:text-gray-100 leading-relaxed",
       },
     },
     onCreate: ({ editor }) => setIsEmpty(editor.isEmpty),
@@ -62,7 +62,7 @@ export function RichEditor({
     <button
       onClick={onClick}
       className={clsx(
-        "rounded-md p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700",
+        "rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700",
         active && "bg-brand-100 text-brand-600 dark:bg-brand-500/20"
       )}
     >
@@ -130,7 +130,7 @@ export function RichEditor({
       )}
       <div className="relative">
         {isEmpty && (
-          <div className="pointer-events-none absolute left-0 top-0 text-sm text-gray-400">
+          <div className="pointer-events-none absolute left-0 top-0 text-ios-footnote text-gray-400">
             {placeholder}
           </div>
         )}

@@ -52,7 +52,7 @@ export function CalendarView({ projectId }: { projectId?: string }) {
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
-        <h2 className="text-lg font-semibold capitalize text-gray-800 dark:text-gray-100">
+        <h2 className="text-ios-title3 font-semibold capitalize text-gray-800 dark:text-gray-100">
           {format(month, "LLLL yyyy", { locale: uk })}
         </h2>
         <button
@@ -65,11 +65,11 @@ export function CalendarView({ projectId }: { projectId?: string }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-xl border border-gray-200 bg-gray-200 dark:border-gray-700 dark:bg-gray-700">
+      <div className="grid grid-cols-7 gap-px overflow-hidden rounded-lg border border-gray-200 bg-gray-200 dark:border-gray-700 dark:bg-gray-700">
         {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Нд"].map((d) => (
           <div
             key={d}
-            className="bg-gray-50 px-2 py-2 text-center text-xs font-medium text-gray-500 dark:bg-gray-900"
+            className="bg-gray-50 px-2 py-2 text-center text-ios-footnote font-medium text-gray-500 dark:bg-gray-900"
           >
             {d}
           </div>
@@ -98,7 +98,7 @@ export function CalendarView({ projectId }: { projectId?: string }) {
               <div className="flex items-center justify-between">
                 <span
                   className={clsx(
-                    "inline-flex h-6 w-6 items-center justify-center rounded-full text-xs",
+                    "inline-flex h-6 w-6 items-center justify-center rounded-full text-ios-footnote",
                     today
                       ? "bg-brand-500 font-bold text-white"
                       : "text-gray-600 dark:text-gray-400"
@@ -114,7 +114,7 @@ export function CalendarView({ projectId }: { projectId?: string }) {
                     key={t.id}
                     onClick={() => openTask(t.id)}
                     className={clsx(
-                      "block w-full truncate rounded px-1 py-0.5 text-left text-[10px]",
+                      "block w-full truncate rounded px-1 py-0.5 text-left text-ios-caption",
                       t.kind === "milestone"
                         ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300"
                         : "bg-brand-100 text-brand-800 dark:bg-brand-500/20 dark:text-brand-200"
@@ -125,7 +125,7 @@ export function CalendarView({ projectId }: { projectId?: string }) {
                   </button>
                 ))}
                 {dayTasks.length > 3 && (
-                  <span className="text-[10px] text-gray-400">
+                  <span className="text-ios-caption text-gray-400">
                     +{dayTasks.length - 3}
                   </span>
                 )}

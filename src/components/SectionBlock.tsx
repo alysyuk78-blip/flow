@@ -75,7 +75,7 @@ function SortableSection({
               if (e.key === "Enter") save();
               if (e.key === "Escape") setEditing(false);
             }}
-            className="flex-1 rounded border border-brand-300 bg-transparent px-2 py-0.5 text-sm font-semibold outline-none dark:border-brand-500"
+            className="flex-1 rounded border border-brand-300 bg-transparent px-2 py-0.5 ios-form-control font-semibold outline-none dark:border-brand-500"
           />
         ) : (
           <h3

@@ -11,7 +11,7 @@ export function NotesView({ projectId }: { projectId: string }) {
 
   return (
     <div className="page-container">
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
+      <div className="rounded-lg border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-900">
         <RichEditor
           key={project.id}
           value={project.notes}

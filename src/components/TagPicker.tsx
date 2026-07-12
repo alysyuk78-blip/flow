@@ -58,16 +58,16 @@ export function TagPicker({
           ))}
         <button
           onClick={() => setOpen((o) => !o)}
-          className="inline-flex items-center gap-1 rounded-full border border-dashed border-gray-300 px-2 py-0.5 text-xs text-gray-500 hover:border-brand-400 hover:text-brand-500 dark:border-gray-600"
+          className="inline-flex items-center gap-1 rounded-full border border-dashed border-gray-300 px-2 py-0.5 text-ios-footnote text-gray-500 hover:border-brand-400 hover:text-brand-500 dark:border-gray-600"
         >
           <Plus className="h-3 w-3" /> Тег
         </button>
       </div>
 
       {open && (
-        <div className="absolute z-20 mt-2 w-56 rounded-xl border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-800">
+        <div className="absolute z-20 mt-2 w-56 rounded-lg border border-gray-200 bg-white p-3 shadow-xl dark:border-gray-700 dark:bg-gray-800">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500">Теги</span>
+            <span className="text-ios-footnote font-semibold text-gray-500">Теги</span>
             <button onClick={() => setOpen(false)}>
               <X className="h-3.5 w-3.5 text-gray-400" />
             </button>
@@ -77,7 +77,7 @@ export function TagPicker({
               <button key={tag.id} onClick={() => toggle(tag.id)}>
                 <span
                   className={
-                    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-2 " +
+                    "ios-tag inline-flex items-center gap-1 rounded-full px-2 py-0.5 ring-2 " +
                     (selected.includes(tag.id)
                       ? "ring-brand-400"
                       : "ring-transparent")
@@ -95,11 +95,11 @@ export function TagPicker({
               onChange={(e) => setName(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && create()}
               placeholder="Новий тег"
-              className="min-w-0 flex-1 rounded-lg border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-400 dark:border-gray-600 dark:bg-gray-700"
+              className="min-w-0 flex-1 rounded-lg border border-gray-200 px-2 py-1 ios-form-control outline-none focus:border-brand-400 dark:border-gray-600 dark:bg-gray-700"
             />
             <button
               onClick={create}
-              className="rounded-lg bg-brand-500 px-2 py-1 text-xs text-white hover:bg-brand-600"
+              className="rounded-lg bg-brand-500 px-2 py-1 text-ios-footnote text-white hover:bg-brand-600"
             >
               +
             </button>

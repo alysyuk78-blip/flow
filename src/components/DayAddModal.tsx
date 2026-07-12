@@ -35,7 +35,7 @@ export function DayAddModal({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md animate-scale-in rounded-2xl border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-700 dark:bg-gray-900"
+        className="w-full max-w-md animate-scale-in rounded-lg border border-gray-200 bg-white p-5 shadow-xl dark:border-gray-700 dark:bg-gray-900"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
@@ -55,19 +55,19 @@ export function DayAddModal({
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder="Назва задачі…"
-          className="mb-3 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-400 dark:border-gray-700 dark:bg-gray-800"
+          className="mb-3 w-full rounded-lg border border-gray-200 px-3 py-2 ios-form-control outline-none focus:border-brand-400 dark:border-gray-700 dark:bg-gray-800"
         />
         <div className="mb-3 flex gap-2">
           <button
             onClick={submit}
             disabled={!title.trim()}
-            className="flex-1 rounded-lg bg-brand-500 py-2 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-40"
+            className="flex-1 rounded-lg bg-brand-500 py-2 text-ios-body font-medium text-white hover:bg-brand-600 disabled:opacity-40"
           >
             Додати
           </button>
           <button
             onClick={() => setShowTemplates((v) => !v)}
-            className="rounded-lg border border-gray-200 px-3 py-2 text-xs text-gray-500 dark:border-gray-700"
+            className="rounded-lg border border-gray-200 px-3 py-2 text-ios-footnote text-gray-500 dark:border-gray-700"
           >
             Шаблон
           </button>
@@ -84,7 +84,7 @@ export function DayAddModal({
                   });
                   onClose();
                 }}
-                className="block w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="block w-full rounded-lg px-2 py-1.5 text-left text-ios-footnote hover:bg-gray-100 dark:hover:bg-gray-800"
               >
                 <span className="font-medium">{tpl.name}</span>
                 <span className="block text-gray-400">{tpl.description}</span>

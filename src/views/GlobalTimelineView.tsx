@@ -17,10 +17,10 @@ export function GlobalTimelineView() {
         <div className="flex items-center gap-3">
           <GanttChartSquare className="h-6 w-6 text-brand-500" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+            <h1 className="ios-page-title">
               Таймлайн
             </h1>
-            <p className="text-sm text-gray-500">
+            <p className="ios-page-subtitle">
               Усі проєкти на одній діаграмі Ганта
             </p>
           </div>

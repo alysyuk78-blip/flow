@@ -73,7 +73,7 @@ export function TaskDetail() {
   return (
     <div className="flex h-full w-full shrink-0 flex-col border-l border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 md:w-[380px]">
       <div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 dark:border-gray-800 xs:px-4">
-        <span className="truncate text-xs font-semibold uppercase tracking-wide text-gray-400">
+        <span className="truncate ios-section-label">
           {task.kind === "milestone" ? "Віха" : "Деталі задачі"}
         </span>
         <div className="flex shrink-0 items-center gap-1">
@@ -81,7 +81,7 @@ export function TaskDetail() {
             <button
               onClick={() => setFocusTaskId(task.id)}
               title="Режим фокусу — таймер 25 хв"
-              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-400 hover:bg-brand-50 hover:text-brand-500 dark:hover:bg-brand-500/10"
+              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-400 hover:bg-brand-50 hover:text-brand-500 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-4 w-4" />
               <span className="hidden min-[400px]:inline">Фокус</span>
@@ -124,7 +124,7 @@ export function TaskDetail() {
             value={task.title}
             onChange={(e) => updateTask(task.id, { title: e.target.value })}
             rows={1}
-            className="min-w-0 flex-1 resize-none break-words bg-transparent text-lg font-semibold text-gray-800 outline-none dark:text-gray-100"
+            className="min-w-0 flex-1 resize-none break-words bg-transparent text-ios-title3 font-semibold text-gray-800 outline-none dark:text-gray-100"
           />
         </div>
 
@@ -138,7 +138,7 @@ export function TaskDetail() {
                   projectId: e.target.value || null,
                 })
               }
-              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
             >
               <option value="">Вхідні</option>
               {projects.map((p) => (
@@ -158,7 +158,7 @@ export function TaskDetail() {
                     sectionId: e.target.value || null,
                   })
                 }
-                className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+                className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
               >
                 <option value="">Без розділу</option>
                 {projectSections.map((s) => (
@@ -178,7 +178,7 @@ export function TaskDetail() {
                     key={s}
                     onClick={() => setStatus(task.id, s)}
                     className={clsx(
-                      "rounded-md px-2 py-1 text-xs",
+                      "rounded-lg px-2 py-1 text-ios-footnote",
                       task.status === s
                         ? "bg-brand-500 text-white"
                         : "bg-gray-100 text-gray-500 dark:bg-gray-800"
@@ -197,7 +197,7 @@ export function TaskDetail() {
               onChange={(e) =>
                 updateTask(task.id, { priority: e.target.value as Priority })
               }
-              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
             >
               {PRIORITY_ORDER.map((p) => (
                 <option key={p} value={p}>
@@ -221,7 +221,7 @@ export function TaskDetail() {
                 if (v && task.dueDate && v > task.dueDate) patch.dueDate = v;
                 updateTask(task.id, patch);
               }}
-              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
             />
           </Row>
 
@@ -239,7 +239,7 @@ export function TaskDetail() {
                   patch.startDate = v;
                 updateTask(task.id, patch);
               }}
-              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+              className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
             />
           </Row>
 
@@ -255,13 +255,13 @@ export function TaskDetail() {
                       deferUntil: e.target.value || null,
                     })
                   }
-                  className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+                  className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
                 />
                 {[1, 3, 7].map((d) => (
                   <button
                     key={d}
                     onClick={() => deferTask(task.id, d)}
-                    className="rounded-md bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                    className="rounded-lg bg-gray-100 px-2 py-1 text-ios-footnote text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
                   >
                     +{d} д
                   </button>
@@ -278,7 +278,7 @@ export function TaskDetail() {
                     alert("У «Мій день» можна додати лише 5 задач.");
                 }}
                 className={clsx(
-                  "rounded-md px-2 py-1 text-xs",
+                  "rounded-lg px-2 py-1 text-ios-footnote",
                   task.isMyDay
                     ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20"
                     : "bg-gray-100 text-gray-500 dark:bg-gray-800"
@@ -304,7 +304,7 @@ export function TaskDetail() {
                       : null,
                   })
                 }
-                className="w-24 rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+                className="w-24 rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
               />
             </Row>
           )}
@@ -312,7 +312,7 @@ export function TaskDetail() {
           {task.kind === "task" && (
             <Row icon={<LayoutGrid className="h-4 w-4" />} label="Матриця">
               <div className="flex gap-2">
-                <label className="flex items-center gap-1 text-xs">
+                <label className="flex items-center gap-1 text-ios-footnote">
                   <input
                     type="checkbox"
                     checked={task.important}
@@ -323,7 +323,7 @@ export function TaskDetail() {
                   />
                   Важливо
                 </label>
-                <label className="flex items-center gap-1 text-xs">
+                <label className="flex items-center gap-1 text-ios-footnote">
                   <input
                     type="checkbox"
                     checked={task.urgent}
@@ -348,14 +348,14 @@ export function TaskDetail() {
                   })
                 }
                 placeholder="Від кого чекаємо?"
-                className="w-full rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+                className="w-full rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
               />
             </Row>
           )}
 
           {task.streakCount > 0 && (
             <Row icon={<span>🔥</span>} label="Серія">
-              <span className="text-sm text-orange-500">
+              <span className="text-ios-body text-orange-500">
                 {task.streakCount} виконань поспіль
               </span>
             </Row>
@@ -363,7 +363,7 @@ export function TaskDetail() {
 
           {task.kind === "task" && (
             <>
-              <Row icon={<span className="text-xs">↻</span>} label="Повтор">
+              <Row icon={<span className="text-ios-footnote">↻</span>} label="Повтор">
                 <select
                   value={task.recurrence}
                   onChange={(e) =>
@@ -371,7 +371,7 @@ export function TaskDetail() {
                       recurrence: e.target.value as Recurrence,
                     })
                   }
-                  className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-sm outline-none dark:border-gray-700"
+                  className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
                 >
                   {(Object.keys(RECURRENCE_LABELS) as Recurrence[]).map(
                     (r) => (
@@ -385,7 +385,7 @@ export function TaskDetail() {
 
               <Row icon={<CalendarDays className="h-4 w-4" />} label="Нагадування">
                 <div className="space-y-2">
-                  <label className="flex cursor-pointer items-center gap-2 text-sm">
+                  <label className="flex cursor-pointer items-center gap-2 text-ios-body">
                     <input
                       type="checkbox"
                       checked={task.reminder}
@@ -410,7 +410,7 @@ export function TaskDetail() {
                             reminderDaysBefore: Number(e.target.value),
                           })
                         }
-                        className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-xs outline-none dark:border-gray-700"
+                        className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
                       >
                         <option value={0}>У день дедлайну</option>
                         <option value={1}>За 1 день</option>
@@ -425,7 +425,7 @@ export function TaskDetail() {
                             reminderTime: e.target.value,
                           })
                         }
-                        className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 text-xs outline-none dark:border-gray-700"
+                        className="rounded-lg border border-gray-200 bg-transparent px-2 py-1 ios-form-control outline-none dark:border-gray-700"
                       />
                     </div>
                   )}
@@ -435,7 +435,7 @@ export function TaskDetail() {
           )}
 
           {task.kind === "task" && (
-            <Row icon={<span className="text-xs font-bold">%</span>} label="Прогрес">
+            <Row icon={<span className="text-ios-footnote font-bold">%</span>} label="Прогрес">
               <div className="flex flex-1 items-center gap-2">
                 <input
                   type="range"
@@ -448,7 +448,7 @@ export function TaskDetail() {
                   }
                   className="flex-1 accent-brand-500"
                 />
-                <span className="w-9 text-right text-xs text-gray-500">
+                <span className="w-9 text-right text-ios-footnote text-gray-500">
                   {progress}%
                 </span>
               </div>
@@ -458,7 +458,7 @@ export function TaskDetail() {
 
         {/* Теги */}
         <div>
-          <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <div className="mb-1.5 ios-section-label">
             Теги
           </div>
           <TagPicker
@@ -469,7 +469,7 @@ export function TaskDetail() {
 
         {task.kind === "task" && (
           <div>
-            <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <div className="mb-1.5 ios-section-label">
               Підзадачі
             </div>
             <div className="space-y-1">
@@ -488,7 +488,7 @@ export function TaskDetail() {
                   </button>
                   <span
                     className={clsx(
-                      "flex-1 text-sm",
+                      "flex-1 text-ios-body",
                       sub.done
                         ? "text-gray-400 line-through"
                         : "text-gray-700 dark:text-gray-200"
@@ -517,7 +517,7 @@ export function TaskDetail() {
                   }
                 }}
                 placeholder="Додати підзадачу…"
-                className="flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+                className="flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -526,11 +526,11 @@ export function TaskDetail() {
         {/* Залежності (для Ганта) */}
         {depOptions.length > 0 && (
           <div>
-            <div className="mb-1.5 flex items-center gap-1 text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <div className="mb-1.5 flex items-center gap-1 ios-section-label">
               <Link2 className="h-3.5 w-3.5" /> Залежить від
             </div>
             {hasCycle && (
-              <div className="mb-2 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
+              <div className="mb-2 flex items-start gap-2 rounded-lg bg-amber-50 px-3 py-2 text-ios-footnote text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
                 <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
                 Циклічна залежність — Гант може відображатись некоректно.
               </div>
@@ -539,7 +539,7 @@ export function TaskDetail() {
               {depOptions.map((dep) => (
                 <label
                   key={dep.id}
-                  className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 dark:text-gray-200"
+                  className="flex cursor-pointer items-center gap-2 text-ios-body text-gray-700 dark:text-gray-200"
                 >
                   <input
                     type="checkbox"
@@ -572,7 +572,7 @@ export function TaskDetail() {
 
         {/* Нотатки */}
         <div>
-          <div className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-gray-400">
+          <div className="mb-1.5 ios-section-label">
             Нотатки
           </div>
           <RichEditor
@@ -598,7 +598,7 @@ function Row({
 }) {
   return (
     <div className="flex flex-col gap-1.5 xs:flex-row xs:items-center xs:gap-3">
-      <div className="flex w-full shrink-0 items-center gap-1.5 text-sm text-gray-500 xs:w-24">
+      <div className="flex w-full shrink-0 items-center gap-1.5 ios-form-label xs:w-24">
         <span className="text-gray-400">{icon}</span>
         {label}
       </div>

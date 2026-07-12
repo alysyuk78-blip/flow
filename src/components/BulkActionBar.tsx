@@ -15,13 +15,13 @@ export function BulkActionBar() {
   if (!selectedIds.length) return null;
 
   return (
-    <div className="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-1.5 rounded-xl border border-brand-200 bg-brand-50 px-2.5 py-2 animate-slide-down xs:gap-2 xs:px-3 dark:border-brand-500/30 dark:bg-brand-500/10">
-      <span className="text-sm font-medium text-brand-700 dark:text-brand-300">
+    <div className="sticky top-0 z-10 mb-3 flex flex-wrap items-center gap-1.5 rounded-lg border border-brand-200 bg-brand-50 px-2.5 py-2 animate-slide-down xs:gap-2 xs:px-3 dark:border-brand-500/30 dark:bg-brand-500/10">
+      <span className="text-ios-body font-medium text-brand-700 dark:text-brand-300">
         Обрано: {selectedIds.length}
       </span>
       <button
         onClick={bulkComplete}
-        className="flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-xs hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
+        className="flex items-center gap-1 rounded-lg bg-white px-2.5 py-1 text-ios-footnote hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700"
       >
         <Check className="h-3.5 w-3.5" /> Виконати
       </button>
@@ -31,7 +31,7 @@ export function BulkActionBar() {
           e.target.value = "";
         }}
         defaultValue=""
-        className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-800"
+        className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-ios-footnote dark:border-gray-700 dark:bg-gray-800"
       >
         <option value="" disabled>
           + Тег
@@ -49,7 +49,7 @@ export function BulkActionBar() {
           e.target.value = "";
         }}
         defaultValue=""
-        className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs dark:border-gray-700 dark:bg-gray-800"
+        className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-ios-footnote dark:border-gray-700 dark:bg-gray-800"
       >
         <option value="" disabled>
           Перенести
@@ -65,7 +65,7 @@ export function BulkActionBar() {
       </select>
       <button
         onClick={bulkDelete}
-        className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
+        className="flex items-center gap-1 rounded-lg px-2.5 py-1 text-ios-footnote text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10"
       >
         <Trash2 className="h-3.5 w-3.5" /> Видалити
       </button>

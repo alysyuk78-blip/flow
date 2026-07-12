@@ -45,10 +45,10 @@ export function SearchView() {
       <div className="mb-5 flex items-center gap-3">
         <Search className="h-6 w-6 text-brand-500" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          <h1 className="ios-page-title">
             Пошук
           </h1>
-          <p className="text-sm text-gray-500">
+          <p className="ios-page-subtitle">
             Знайдено: {results.length}
             {q ? ` за «${query}»` : " (усі задачі з фільтрами)"}
           </p>
@@ -58,9 +58,9 @@ export function SearchView() {
       <SearchFilterBar />
 
       {results.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-200 py-16 text-center text-gray-400 dark:border-gray-700">
+        <div className="rounded-lg border border-dashed border-gray-200 py-16 text-center text-gray-400 dark:border-gray-700">
           <SearchX className="mx-auto h-10 w-10" strokeWidth={1} />
-          <p className="mt-3 text-sm">Нічого не знайдено</p>
+          <p className="mt-3 ios-empty">Нічого не знайдено</p>
         </div>
       ) : (
         <SortableTaskList tasks={results} showProject selectable />

@@ -94,13 +94,13 @@ export function TimelineChart({
       <div className="min-w-max px-6 py-4">
         {showZoom && (
           <div className="mb-3 flex items-center gap-2">
-            <span className="text-xs text-gray-500">Масштаб:</span>
+            <span className="text-ios-footnote text-gray-500">Масштаб:</span>
             {(Object.keys(TIMELINE_ZOOM_LABELS) as TimelineZoom[]).map((z) => (
               <button
                 key={z}
                 onClick={() => setTimelineZoom(z)}
                 className={clsx(
-                  "rounded-lg px-2.5 py-1 text-xs transition",
+                  "rounded-lg px-2.5 py-1 text-ios-footnote transition",
                   zoom === z
                     ? "bg-brand-500 text-white"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
@@ -110,7 +110,7 @@ export function TimelineChart({
               </button>
             ))}
             {critical.size > 0 && (
-              <span className="ml-2 text-xs text-amber-600 dark:text-amber-400">
+              <span className="ml-2 text-ios-footnote text-amber-600 dark:text-amber-400">
                 Помаранчева смужка — критичний шлях
               </span>
             )}
@@ -118,7 +118,7 @@ export function TimelineChart({
         )}
 
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-200 py-14 text-center text-sm text-gray-400 dark:border-gray-700">
+          <div className="rounded-lg border border-dashed border-gray-200 py-14 text-center ios-empty dark:border-gray-700">
             Додайте задачі з датами, щоб побачити таймлайн.
           </div>
         ) : (
@@ -133,7 +133,7 @@ export function TimelineChart({
                   key={task.id}
                   style={{ height: ROW_H }}
                   onClick={() => openTask(task.id)}
-                  className="flex cursor-pointer items-center gap-1 truncate border-b border-gray-100 pr-3 text-sm text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200"
+                  className="flex cursor-pointer items-center gap-1 truncate border-b border-gray-100 pr-3 text-ios-body text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200"
                 >
                   {task.kind === "milestone" && (
                     <span className="text-amber-500">◆</span>
@@ -150,7 +150,7 @@ export function TimelineChart({
                     key={i}
                     style={{ width: DAY_W }}
                     className={clsx(
-                      "flex flex-col items-center justify-center border-b border-l border-gray-200 text-[10px] dark:border-gray-700",
+                      "flex flex-col items-center justify-center border-b border-l border-gray-200 text-ios-caption dark:border-gray-700",
                       isWeekend(d) && "bg-gray-50 dark:bg-gray-800/40",
                       isToday(d) && "bg-brand-50 dark:bg-brand-500/10"
                     )}
@@ -233,7 +233,7 @@ export function TimelineChart({
                       key={task.id}
                       onClick={() => openTask(task.id)}
                       className={clsx(
-                        "absolute flex cursor-pointer items-center overflow-hidden rounded-md text-xs text-white shadow-sm ring-2 ring-transparent",
+                        "absolute flex cursor-pointer items-center overflow-hidden rounded-lg text-ios-footnote text-white shadow-sm ring-2 ring-transparent",
                         done ? "bg-green-500" : "bg-brand-500",
                         isCritical && !done && "ring-amber-400"
                       )}

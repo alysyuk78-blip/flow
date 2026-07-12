@@ -244,7 +244,7 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        "safe-top safe-bottom fixed inset-y-0 left-0 z-50 flex h-full w-[min(100%,20rem)] shrink-0 flex-col border-r border-gray-200 bg-gray-50 transition-transform duration-350 ease-smooth dark:border-gray-800 dark:bg-gray-900 xs:w-72 md:relative md:z-auto md:w-64 md:translate-x-0",
+        "safe-top safe-bottom fixed left-0 z-50 flex w-[min(100%,20rem)] shrink-0 flex-col overflow-hidden border-r border-gray-200 bg-gray-50 transition-transform duration-350 ease-smooth dark:border-gray-800 dark:bg-gray-900 xs:w-72 max-md:top-2 max-md:h-[calc(100%-1rem)] max-md:rounded-r-lg max-md:shadow-xl md:relative md:inset-y-0 md:z-auto md:h-full md:w-64 md:translate-x-0 md:rounded-none md:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
@@ -271,7 +271,7 @@ export function Sidebar() {
               onClick={() => setTheme(id)}
               title={label}
               className={clsx(
-                "rounded-md p-1.5 transition",
+                "rounded-lg p-1.5 transition",
                 theme === id
                   ? "bg-brand-500 text-white"
                   : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
@@ -422,7 +422,7 @@ export function Sidebar() {
               if (e.key === "Escape") setAddingArea(false);
             }}
             placeholder="Назва області"
-            className="mx-2 mb-2 w-[calc(100%-1rem)] rounded-lg border border-brand-300 px-3 py-1.5 text-sm outline-none dark:bg-gray-800"
+            className="mx-2 mb-2 w-[calc(100%-1rem)] rounded-lg border border-brand-300 px-3 py-1.5 ios-form-control outline-none dark:bg-gray-800"
           />
         )}
 
@@ -435,7 +435,7 @@ export function Sidebar() {
                   addProjectFromTemplate(tpl.id);
                   setShowTemplates(false);
                 }}
-                className="block w-full rounded-md px-2 py-1.5 text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="block w-full rounded-lg px-2 py-1.5 text-left text-ios-footnote hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <span className="font-medium text-gray-800 dark:text-gray-100">
                   {tpl.name}
@@ -550,7 +550,7 @@ export function Sidebar() {
         {archivedCount > 0 && (
           <button
             onClick={() => setShowArchivedProjects(!showArchivedProjects)}
-            className="mx-2 mt-1 text-[11px] text-gray-400 hover:text-brand-500"
+            className="mx-2 mt-1 text-ios-caption text-gray-400 hover:text-brand-500"
           >
             {showArchivedProjects
               ? "Сховати архів"
@@ -569,7 +569,7 @@ export function Sidebar() {
               if (e.key === "Escape") setAdding(false);
             }}
             placeholder="Назва проєкту"
-            className="mx-2 w-[calc(100%-1rem)] rounded-lg border border-brand-300 px-3 py-2 text-sm outline-none dark:bg-gray-800"
+            className="mx-2 w-[calc(100%-1rem)] rounded-lg border border-brand-300 px-3 py-2 ios-form-control outline-none dark:bg-gray-800"
           />
         )}
       </nav>
@@ -579,35 +579,35 @@ export function Sidebar() {
           <button
             onClick={exportBackup}
             title="JSON резервна копія"
-            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <Download className="h-3.5 w-3.5" /> JSON
           </button>
           <button
             onClick={exportCsv}
             title="CSV для Excel"
-            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <FileSpreadsheet className="h-3.5 w-3.5" /> CSV
           </button>
           <button
             onClick={exportIcal}
             title="iCal для календаря"
-            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <CalendarDays className="h-3.5 w-3.5" /> iCal
           </button>
           <button
             onClick={() => fileInput.current?.click()}
             title="Імпорт JSON"
-            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <Upload className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => icalInput.current?.click()}
             title="Імпорт iCal (.ics)"
-            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-xs text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
+            className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
           >
             <CalendarDays className="h-3.5 w-3.5" /> ICS
           </button>
@@ -641,7 +641,7 @@ export function Sidebar() {
             <HelpCircle className="h-4 w-4" />
           </button>
         </div>
-        <div className="mt-1 px-2 text-[11px] text-gray-400">
+        <div className="mt-1 px-2 text-ios-caption text-gray-400">
           Дані в браузері · автобекап раз на 7 днів
         </div>
       </div>

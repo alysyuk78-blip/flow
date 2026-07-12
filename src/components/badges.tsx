@@ -21,7 +21,7 @@ export function PriorityFlag({ priority }: { priority: Priority }) {
 export function TagChip({ tag, onRemove }: { tag: Tag; onRemove?: () => void }) {
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
+      className="ios-tag inline-flex items-center gap-1 rounded-full px-2 py-0.5"
       style={{ backgroundColor: tag.color + "22", color: tag.color }}
     >
       {tag.name}

@@ -128,7 +128,7 @@ export default function App() {
             className="fixed inset-0 z-40 animate-fade-in bg-black/40 md:hidden"
             onClick={() => openTask(null)}
           />
-          <div className="safe-top safe-bottom fixed inset-0 z-50 flex flex-col animate-slide-in-right md:static md:z-auto md:w-[380px] md:shrink-0">
+          <div className="safe-top safe-bottom fixed inset-0 z-50 flex flex-col overflow-hidden animate-slide-in-right max-md:m-2 max-md:max-h-[calc(100%-1rem)] max-md:rounded-lg max-md:shadow-xl md:static md:z-auto md:m-0 md:max-h-none md:w-[380px] md:shrink-0 md:rounded-none md:shadow-none">
             <TaskDetail />
           </div>
         </>

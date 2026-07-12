@@ -84,10 +84,10 @@ export function FocusMode() {
     <div className="fixed inset-0 z-[60] flex h-[100dvh] flex-col bg-gray-950 text-white animate-fade-in safe-top safe-bottom">
       <div className="safe-x flex shrink-0 items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
         <div className="text-left">
-          <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <div className="ios-section-label">
             Режим фокусу
           </div>
-          <p className="mt-0.5 text-xs text-gray-600">
+          <p className="mt-0.5 text-ios-footnote text-gray-600">
             Pomodoro: 25 хв робота → 5 хв перерва · Esc — вийти
           </p>
         </div>
@@ -101,10 +101,10 @@ export function FocusMode() {
       </div>
 
       <div className="safe-x flex min-h-0 flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
-        <h1 className="mb-2 max-w-2xl text-2xl font-bold xs:text-3xl md:text-4xl">
+        <h1 className="mb-2 max-w-2xl ios-page-title">
           {task.title}
         </h1>
-        <p className="mb-8 text-sm text-gray-500">
+        <p className="mb-8 ios-page-subtitle">
           {onBreak
             ? "Перерва — відпочиньте, потім знову до роботи"
             : "Зосередьтесь лише на цій задачі"}
@@ -141,7 +141,7 @@ export function FocusMode() {
             <span className="text-3xl font-mono font-bold tabular-nums xs:text-4xl">
               {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
             </span>
-            <span className="mt-1 text-sm text-gray-400">
+            <span className="mt-1 text-ios-footnote text-gray-400">
               {onBreak ? (
                 <span className="inline-flex items-center gap-1">
                   <Coffee className="h-3.5 w-3.5" /> Перерва
@@ -156,7 +156,7 @@ export function FocusMode() {
         <div className="flex w-full max-w-sm flex-wrap items-center justify-center gap-2 px-2 sm:max-w-none sm:gap-3">
           <button
             onClick={() => setRunning((r) => !r)}
-            className="touch-target flex min-w-[7rem] flex-1 items-center justify-center gap-2 rounded-xl bg-brand-500 px-4 py-3 font-medium hover:bg-brand-600 sm:flex-none sm:px-6"
+            className="touch-target flex min-w-[7rem] flex-1 items-center justify-center gap-2 rounded-lg bg-brand-500 px-4 py-3 font-medium hover:bg-brand-600 sm:flex-none sm:px-6"
           >
             {running ? (
               <>
@@ -170,7 +170,7 @@ export function FocusMode() {
           </button>
           <button
             onClick={() => reset(onBreak)}
-            className="rounded-xl border border-gray-700 px-4 py-3 text-sm text-gray-400 hover:border-gray-500 hover:text-white"
+            className="rounded-lg border border-gray-700 px-4 py-3 text-ios-body text-gray-400 hover:border-gray-500 hover:text-white"
           >
             Скинути
           </button>
@@ -180,7 +180,7 @@ export function FocusMode() {
                 toggleDone(task.id);
                 setFocusTaskId(null);
               }}
-              className="flex items-center gap-2 rounded-xl border border-emerald-600 px-4 py-3 text-sm text-emerald-400 hover:bg-emerald-600/10"
+              className="flex items-center gap-2 rounded-lg border border-emerald-600 px-4 py-3 text-ios-body text-emerald-400 hover:bg-emerald-600/10"
             >
               <Check className="h-4 w-4" /> Готово
             </button>
