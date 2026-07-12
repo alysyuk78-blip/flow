@@ -89,15 +89,17 @@ export default function App() {
   return (
     <div className="app-shell flex w-full overflow-hidden bg-white text-gray-900 transition-colors duration-250 dark:bg-gray-950 dark:text-gray-100">
       {/* Мобільний заголовок */}
-      <div className="mobile-header page-gutter-x fixed left-0 right-0 top-0 z-30 flex items-center gap-3 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:hidden">
-        <button
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Відкрити меню"
-          className="flex h-11 min-w-[2.75rem] shrink-0 items-center justify-start rounded-lg text-gray-600 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <span className="truncate font-bold">Flow</span>
+      <div className="mobile-header page-gutter-x fixed left-0 right-0 top-0 z-30 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:hidden">
+        <div className="grid h-12 grid-cols-[1.5rem_1fr] items-center gap-3">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Відкрити меню"
+            className="flex h-11 w-6 items-center justify-start rounded-lg text-gray-600 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <span className="truncate text-xl font-bold">Flow</span>
+        </div>
       </div>
 
       {sidebarOpen && (
