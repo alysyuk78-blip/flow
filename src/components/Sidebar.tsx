@@ -244,7 +244,7 @@ export function Sidebar() {
   return (
     <aside
       className={clsx(
-        "safe-top safe-bottom fixed left-0 z-50 flex w-[min(100%,20rem)] shrink-0 flex-col overflow-hidden border-r border-gray-200 bg-gray-50 transition-transform duration-350 ease-smooth dark:border-gray-800 dark:bg-gray-900 xs:w-72 max-md:top-2 max-md:h-[calc(100%-1rem)] max-md:rounded-r-lg max-md:shadow-xl md:relative md:inset-y-0 md:z-auto md:h-full md:w-64 md:translate-x-0 md:rounded-none md:shadow-none",
+        "safe-top safe-bottom fixed inset-y-0 left-0 z-50 flex h-full w-[min(100%,20rem)] shrink-0 flex-col overflow-hidden border-r border-gray-200 bg-gray-50 transition-transform duration-350 ease-smooth dark:border-gray-800 dark:bg-gray-900 xs:w-72 max-md:rounded-br-lg max-md:shadow-xl md:relative md:z-auto md:w-64 md:translate-x-0 md:rounded-none md:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}
     >
