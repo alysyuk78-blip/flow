@@ -1,23 +1,72 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Menu } from "lucide-react";
 import { useStore } from "./store/useStore";
 import { Sidebar } from "./components/Sidebar";
-import { TaskDetail } from "./components/TaskDetail";
 import { HelpModal } from "./components/HelpModal";
 import { UndoToast } from "./components/UndoToast";
 import { FocusMode } from "./components/FocusMode";
 import { BulkActionBar } from "./components/BulkActionBar";
-import { SmartListView } from "./views/SmartListView";
-import { ProjectView } from "./views/ProjectView";
-import { SearchView } from "./views/SearchView";
-import { LogbookView } from "./views/LogbookView";
-import { GlobalTimelineView } from "./views/GlobalTimelineView";
-import { CalendarView } from "./views/CalendarView";
-import { WeeklyReviewView } from "./views/WeeklyReviewView";
-import { MatrixView } from "./views/MatrixView";
-import { StatsView } from "./views/StatsView";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useReminders, useAutoBackup } from "./hooks/useReminders";
+
+const TaskDetail = lazy(() =>
+  import("./components/TaskDetail").then((module) => ({
+    default: module.TaskDetail,
+  }))
+);
+const SmartListView = lazy(() =>
+  import("./views/SmartListView").then((module) => ({
+    default: module.SmartListView,
+  }))
+);
+const ProjectView = lazy(() =>
+  import("./views/ProjectView").then((module) => ({
+    default: module.ProjectView,
+  }))
+);
+const SearchView = lazy(() =>
+  import("./views/SearchView").then((module) => ({
+    default: module.SearchView,
+  }))
+);
+const LogbookView = lazy(() =>
+  import("./views/LogbookView").then((module) => ({
+    default: module.LogbookView,
+  }))
+);
+const GlobalTimelineView = lazy(() =>
+  import("./views/GlobalTimelineView").then((module) => ({
+    default: module.GlobalTimelineView,
+  }))
+);
+const CalendarView = lazy(() =>
+  import("./views/CalendarView").then((module) => ({
+    default: module.CalendarView,
+  }))
+);
+const WeeklyReviewView = lazy(() =>
+  import("./views/WeeklyReviewView").then((module) => ({
+    default: module.WeeklyReviewView,
+  }))
+);
+const MatrixView = lazy(() =>
+  import("./views/MatrixView").then((module) => ({
+    default: module.MatrixView,
+  }))
+);
+const StatsView = lazy(() =>
+  import("./views/StatsView").then((module) => ({
+    default: module.StatsView,
+  }))
+);
+
+function ViewFallback() {
+  return (
+    <div className="page-container ios-empty">
+      Завантаження...
+    </div>
+  );
+}
 
 export default function App() {
   const selection = useStore((s) => s.selection);
@@ -118,7 +167,9 @@ export default function App() {
           </div>
         )}
         <div key={viewKey} className="h-full overflow-y-auto overscroll-contain animate-fade-in">
-          {mainContent()}
+          <Suspense fallback={<ViewFallback />}>
+            {mainContent()}
+          </Suspense>
         </div>
       </main>
 
@@ -129,7 +180,9 @@ export default function App() {
             onClick={() => openTask(null)}
           />
           <div className="safe-top safe-bottom fixed inset-0 z-50 flex flex-col overflow-hidden animate-slide-in-right max-md:m-2 max-md:max-h-[calc(100%-1rem)] max-md:rounded-lg max-md:shadow-xl md:static md:z-auto md:m-0 md:max-h-none md:w-[380px] md:shrink-0 md:rounded-none md:shadow-none">
-            <TaskDetail />
+            <Suspense fallback={null}>
+              <TaskDetail />
+            </Suspense>
           </div>
         </>
       )}

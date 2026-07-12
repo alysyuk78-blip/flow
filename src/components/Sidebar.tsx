@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import {
   Inbox,
@@ -78,8 +78,18 @@ export function Sidebar() {
   const [areaName, setAreaName] = useState("");
   const [showTemplates, setShowTemplates] = useState(false);
   const [name, setName] = useState("");
+  const [isDesktop, setIsDesktop] = useState(false);
+  const asideRef = useRef<HTMLElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const icalInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
 
   const visibleProjects = [...(showArchivedProjects
     ? projects
@@ -93,6 +103,17 @@ export function Sidebar() {
     return a.order - b.order;
   });
   const archivedCount = projects.filter((p) => p.archived).length;
+  const sidebarHiddenForA11y = !sidebarOpen && !isDesktop;
+
+  useEffect(() => {
+    const aside = asideRef.current;
+    if (!aside) return;
+    if (sidebarHiddenForA11y) {
+      aside.setAttribute("inert", "");
+    } else {
+      aside.removeAttribute("inert");
+    }
+  }, [sidebarHiddenForA11y]);
 
   function exportBackup() {
     const data = JSON.stringify(
@@ -243,6 +264,8 @@ export function Sidebar() {
 
   return (
     <aside
+      ref={asideRef}
+      aria-hidden={sidebarHiddenForA11y ? true : undefined}
       className={clsx(
         "safe-top safe-bottom fixed inset-y-0 left-0 z-50 flex h-full w-[min(100%,20rem)] shrink-0 flex-col overflow-hidden border-r border-gray-200 bg-gray-50 transition-transform duration-350 ease-smooth dark:border-gray-800 dark:bg-gray-900 xs:w-72 max-md:rounded-br-lg max-md:shadow-xl md:relative md:z-auto md:w-64 md:translate-x-0 md:rounded-none md:shadow-none",
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
