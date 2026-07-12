@@ -95,7 +95,7 @@ export function TaskRow({
       <div className="min-w-0 flex-1 overflow-hidden">
         <p
           className={clsx(
-            "truncate text-sm leading-snug",
+            "truncate text-ios-body leading-snug",
             done
               ? "text-gray-400 line-through"
               : "text-gray-800 dark:text-gray-100"
@@ -158,7 +158,7 @@ export function TaskRow({
           )}
         </div>
 
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-ios-footnote text-gray-500">
           {showProject && project && (
             <span className="inline-flex max-w-full items-center gap-1 truncate">
               <Folder className="h-3 w-3 shrink-0" strokeWidth={1.5} />

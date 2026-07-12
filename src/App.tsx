@@ -98,7 +98,7 @@ export default function App() {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <span className="truncate text-xl font-bold">Flow</span>
+          <span className="truncate ios-page-title">Flow</span>
         </div>
       </div>
 

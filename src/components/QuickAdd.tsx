@@ -60,12 +60,12 @@ export function QuickAdd({
           }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder={placeholder}
-          className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+          className="min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
         />
         {showTemplates && (
           <button
             onClick={() => setTemplatesOpen((v) => !v)}
-            className="shrink-0 text-xs text-gray-400 hover:text-brand-500"
+            className="shrink-0 text-ios-footnote text-gray-400 hover:text-brand-500"
           >
             Шаблон
           </button>

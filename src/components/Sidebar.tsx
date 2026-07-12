@@ -252,7 +252,7 @@ export function Sidebar() {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-white">
           <Layers className="h-5 w-5" />
         </div>
-        <span className="text-lg font-bold text-gray-800 dark:text-gray-100">
+        <span className="text-ios-title3 font-bold text-gray-800 dark:text-gray-100">
           Flow
         </span>
         <div
@@ -290,7 +290,7 @@ export function Sidebar() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Пошук…"
-            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-gray-400"
+            className="min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
           />
           {searchQuery && (
             <button
@@ -312,7 +312,7 @@ export function Sidebar() {
               key={item.id}
               onClick={() => select({ kind: "smart", list: item.id })}
               className={clsx(
-                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-200 ease-smooth",
+                "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 ios-list-row transition-all duration-200 ease-smooth",
                 active
                   ? "bg-brand-500 text-white"
                   : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800"
@@ -323,10 +323,8 @@ export function Sidebar() {
               {counts[item.id] != null && counts[item.id]! > 0 && (
                 <span
                   className={clsx(
-                    "rounded-full px-1.5 text-xs",
-                    active
-                      ? "bg-white/20"
-                      : "bg-gray-200 text-gray-500 dark:bg-gray-800"
+                    "ios-list-count",
+                    active && "text-white/80"
                   )}
                 >
                   {counts[item.id]}
@@ -339,7 +337,7 @@ export function Sidebar() {
         {contextTags.length > 0 && (
           <>
             <div className="px-2 pb-1 pt-4">
-              <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+              <span className="ios-section-label">
                 Контекст
               </span>
             </div>
@@ -355,7 +353,7 @@ export function Sidebar() {
                       select({ kind: "smart", list: "all" });
                     }}
                     className={clsx(
-                      "rounded-full px-2 py-0.5 text-[11px] font-medium transition",
+                      "rounded-full px-2.5 py-0.5 text-ios-footnote font-medium transition",
                       active
                         ? "text-white"
                         : "hover:opacity-80"
@@ -376,7 +374,7 @@ export function Sidebar() {
 
         <div className="px-2 pb-1 pt-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">
+            <span className="ios-section-label">
               Проєкти
             </span>
             <div className="flex items-center gap-0.5">
@@ -458,7 +456,7 @@ export function Sidebar() {
               nodes.push(
                 <div
                   key={`area-${project.areaId ?? "none"}`}
-                  className="flex items-center gap-1 px-3 py-1 text-[11px] font-medium text-gray-400"
+                  className="flex items-center gap-1 px-3 py-1 text-ios-footnote font-medium text-gray-400"
                 >
                   {area ? (
                     <>
@@ -490,7 +488,7 @@ export function Sidebar() {
                     select({ kind: "project", projectId: project.id })
                   }
                   className={clsx(
-                    "flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 text-sm transition-all duration-200 ease-smooth",
+                    "flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-2 ios-list-row transition-all duration-200 ease-smooth",
                     active
                       ? "bg-brand-500 text-white"
                       : "text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-800",
@@ -504,10 +502,8 @@ export function Sidebar() {
                   {open > 0 && (
                     <span
                       className={clsx(
-                        "shrink-0 rounded-full px-1.5 text-xs",
-                        active
-                          ? "bg-white/20"
-                          : "bg-gray-200 text-gray-500 dark:bg-gray-800"
+                        "ios-list-count shrink-0",
+                        active && "text-white/80"
                       )}
                     >
                       {open}

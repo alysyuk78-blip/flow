@@ -80,7 +80,7 @@ function SortableSection({
         ) : (
           <h3
             onClick={() => setEditing(true)}
-            className="flex flex-1 cursor-text items-center gap-1 text-sm font-semibold text-gray-700 dark:text-gray-200"
+            className="flex flex-1 cursor-text items-center gap-1 text-ios-body font-semibold text-gray-700 dark:text-gray-200"
           >
             {section.title}
             <Pencil className="h-3 w-3 text-gray-300 opacity-0 group-hover:opacity-100" />

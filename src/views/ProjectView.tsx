@@ -74,12 +74,12 @@ export function ProjectView({ projectId }: { projectId: string }) {
               onKeyDown={(e) => {
                 if (e.key === "Enter") (e.target as HTMLInputElement).blur();
               }}
-              className="min-w-0 flex-1 rounded-lg border border-brand-300 px-2 py-1 text-xl font-bold outline-none xs:text-2xl dark:bg-gray-800"
+              className="min-w-0 flex-1 rounded-lg border border-brand-300 px-2 py-1 text-ios-title2 font-bold outline-none dark:bg-gray-800"
             />
           ) : (
             <h1
               onClick={() => setEditingName(true)}
-              className="min-w-0 flex-1 cursor-text truncate text-xl font-bold text-gray-800 xs:text-2xl dark:text-gray-100"
+              className="min-w-0 flex-1 cursor-text truncate text-ios-title2 font-bold text-gray-800 dark:text-gray-100"
             >
               {project.name}
             </h1>
@@ -115,7 +115,7 @@ export function ProjectView({ projectId }: { projectId: string }) {
               )}
             </button>
           </div>
-          <div className="flex min-w-0 flex-1 items-center gap-2 text-sm text-gray-500">
+          <div className="flex min-w-0 flex-1 items-center gap-2 text-ios-footnote text-gray-500">
             <span className="shrink-0">
               {done}/{all.length} готово
             </span>
@@ -134,7 +134,7 @@ export function ProjectView({ projectId }: { projectId: string }) {
               key={v.id}
               onClick={() => setView(v.id)}
               className={clsx(
-                "touch-target flex shrink-0 items-center gap-1.5 rounded-t-lg border-b-2 px-2.5 py-2 text-sm transition-all duration-200 ease-smooth min-[400px]:px-3",
+                "touch-target flex shrink-0 items-center gap-1.5 rounded-t-lg border-b-2 px-2.5 py-2 text-ios-footnote transition-all duration-200 ease-smooth min-[400px]:px-3",
                 view === v.id
                   ? "border-brand-500 text-brand-600 dark:text-brand-400"
                   : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"

@@ -158,10 +158,10 @@ export function SmartListView({ list }: { list: SmartList }) {
       <div className="mb-5 flex min-w-0 items-start gap-3">
         <div className="shrink-0">{meta.icon}</div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-bold text-gray-800 xs:text-2xl dark:text-gray-100">
+          <h1 className="ios-page-title">
             {meta.title}
           </h1>
-          <p className="text-sm leading-snug text-gray-500">{meta.hint}</p>
+          <p className="ios-page-subtitle">{meta.hint}</p>
         </div>
       </div>
 
@@ -200,7 +200,7 @@ export function SmartListView({ list }: { list: SmartList }) {
           {grouped.map((group) => (
             <div key={group.label || "single"}>
               {group.label && (
-                <div className="mb-1 px-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
+                <div className="mb-1 px-3 ios-section-label">
                   {group.label}
                 </div>
               )}

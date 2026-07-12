@@ -7,6 +7,14 @@ export default {
       screens: {
         xs: "375px",
       },
+      fontSize: {
+        "ios-body": ["17px", { lineHeight: "22px", letterSpacing: "-0.41px" }],
+        "ios-subhead": ["15px", { lineHeight: "20px", letterSpacing: "-0.24px" }],
+        "ios-footnote": ["13px", { lineHeight: "18px", letterSpacing: "-0.08px" }],
+        "ios-caption": ["12px", { lineHeight: "16px", letterSpacing: "0px" }],
+        "ios-title2": ["22px", { lineHeight: "28px", letterSpacing: "0.35px" }],
+        "ios-title3": ["20px", { lineHeight: "25px", letterSpacing: "0.38px" }],
+      },
       colors: {
         brand: {
           50: "#eef2ff",

@@ -85,6 +85,27 @@ body {
 }
 
 @layer components {
+  /* iOS «Нагадування» — типографіка */
+  .ios-section-label {
+    @apply text-ios-footnote font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400;
+  }
+
+  .ios-list-row {
+    @apply text-ios-body;
+  }
+
+  .ios-list-count {
+    @apply text-ios-subhead tabular-nums text-gray-400 dark:text-gray-500;
+  }
+
+  .ios-page-title {
+    @apply text-ios-title2 font-bold text-gray-900 dark:text-gray-100;
+  }
+
+  .ios-page-subtitle {
+    @apply text-ios-footnote leading-snug text-gray-500;
+  }
+
   /* Контейнер сторінки: iPhone SE → Pro Max */
   .page-container {
     @apply mx-auto w-full max-w-3xl py-5 sm:py-8;
