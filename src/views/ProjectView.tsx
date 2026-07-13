@@ -134,7 +134,7 @@ export function ProjectView({ projectId }: { projectId: string }) {
               key={v.id}
               onClick={() => setView(v.id)}
               className={clsx(
-                "touch-target flex shrink-0 items-center gap-1.5 rounded-t-lg border-b-2 px-2.5 py-2 text-ios-footnote transition-all duration-200 ease-smooth min-[400px]:px-3",
+                "touch-target flex shrink-0 items-center gap-1.5 rounded-t-lg border-b-2 px-2.5 py-2 text-ios-footnote transition-all duration-200 ease-smooth sm:px-3",
                 view === v.id
                   ? "border-brand-500 text-brand-600 dark:text-brand-400"
                   : "border-transparent text-gray-500 hover:text-gray-800 dark:hover:text-gray-200"
@@ -142,7 +142,7 @@ export function ProjectView({ projectId }: { projectId: string }) {
               title={v.label}
             >
               {v.icon}
-              <span className="hidden min-[400px]:inline">{v.label}</span>
+              <span className="hidden sm:inline">{v.label}</span>
             </button>
           ))}
         </div>

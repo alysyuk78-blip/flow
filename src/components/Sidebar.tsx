@@ -60,6 +60,7 @@ export function Sidebar() {
   const showArchivedProjects = useStore((s) => s.showArchivedProjects);
   const setShowArchivedProjects = useStore((s) => s.setShowArchivedProjects);
   const sidebarOpen = useStore((s) => s.sidebarOpen);
+  const setSidebarOpen = useStore((s) => s.setSidebarOpen);
   const theme = useStore((s) => s.theme);
   const setTheme = useStore((s) => s.setTheme);
   const tags = useStore((s) => s.tags);
@@ -304,23 +305,38 @@ export function Sidebar() {
             </button>
           ))}
         </div>
+        <button
+          onClick={() => setSidebarOpen(false)}
+          aria-label="Закрити меню"
+          title="Закрити меню"
+          className="touch-target -mr-2 flex shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-200 hover:text-gray-600 md:hidden dark:hover:bg-gray-800"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
       <div className="px-3 pb-2">
-        <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
+        <div className="flex min-h-11 items-center gap-2 rounded-lg border border-gray-200 bg-white px-2.5 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
           <Search className="h-3.5 w-3.5 shrink-0 text-gray-400" />
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if ((e.key === "Enter" || e.key === "Escape") && !isDesktop) {
+                setSidebarOpen(false);
+              }
+            }}
             placeholder="Пошук…"
-            className="min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
+            className="min-h-11 min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="text-gray-400 hover:text-gray-600"
+              aria-label="Очистити пошук"
+              title="Очистити пошук"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-4 w-4" />
             </button>
           )}
         </div>

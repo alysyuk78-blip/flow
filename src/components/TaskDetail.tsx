@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   X,
   Trash2,
@@ -33,7 +33,7 @@ import { computedProgress } from "../lib/filters";
 import { cycleMembers } from "../lib/dependencies";
 import { todayISO } from "../lib/dates";
 
-export function TaskDetail() {
+export function TaskDetail({ isModal = false }: { isModal?: boolean }) {
   const selectedTaskId = useStore((s) => s.selectedTaskId);
   const task = useStore((s) =>
     s.tasks.find((t) => t.id === s.selectedTaskId)
@@ -54,6 +54,43 @@ export function TaskDetail() {
   const deferTask = useStore((s) => s.deferTask);
 
   const [subInput, setSubInput] = useState("");
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isModal || !selectedTaskId) return;
+    const panel = panelRef.current;
+    closeButtonRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        openTask(null);
+        return;
+      }
+      if (event.key !== "Tab" || !panel) return;
+
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((element) => element.offsetParent !== null);
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isModal, openTask, selectedTaskId]);
 
   if (!selectedTaskId || !task) return null;
 
@@ -71,17 +108,24 @@ export function TaskDetail() {
   const hasCycle = cycle.length > 1;
 
   return (
-    <div className="flex h-full w-full shrink-0 flex-col border-l border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 md:w-[380px]">
+    <div
+      ref={panelRef}
+      role={isModal ? "dialog" : undefined}
+      aria-modal={isModal ? true : undefined}
+      aria-labelledby={isModal ? "task-detail-heading" : undefined}
+      className="flex h-full w-full shrink-0 flex-col border-l border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900 md:w-[380px]"
+    >
       <div className="flex shrink-0 items-center justify-between gap-2 border-b border-gray-200 px-3 py-3 dark:border-gray-800 xs:px-4">
-        <span className="truncate ios-section-label">
+        <span id="task-detail-heading" className="truncate ios-section-label">
           {task.kind === "milestone" ? "Віха" : "Деталі задачі"}
         </span>
         <div className="flex shrink-0 items-center gap-1">
           {task.status !== "done" && (
             <button
               onClick={() => setFocusTaskId(task.id)}
+              aria-label="Запустити режим фокусу"
               title="Режим фокусу — таймер 25 хв"
-              className="flex items-center gap-1 rounded-lg px-2 py-1.5 text-ios-footnote text-gray-400 hover:bg-brand-50 hover:text-brand-500 dark:hover:bg-brand-500/10"
+              className="touch-target flex items-center gap-1 rounded-lg px-2 text-ios-footnote text-gray-400 hover:bg-brand-50 hover:text-brand-500 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-4 w-4" />
               <span className="hidden min-[400px]:inline">Фокус</span>
@@ -91,13 +135,18 @@ export function TaskDetail() {
             onClick={() => {
               if (confirm("Видалити задачу?")) deleteTask(task.id);
             }}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500/10"
+            aria-label="Видалити задачу"
+            title="Видалити задачу"
+            className="touch-target flex items-center justify-center rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-500/10"
           >
             <Trash2 className="h-4 w-4" />
           </button>
           <button
+            ref={closeButtonRef}
             onClick={() => openTask(null)}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+            aria-label="Закрити деталі задачі"
+            title="Закрити"
+            className="touch-target flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <X className="h-4 w-4" />
           </button>
@@ -109,16 +158,21 @@ export function TaskDetail() {
         <div className="flex items-start gap-2">
           <button
             onClick={() => toggleDone(task.id)}
-            className={clsx(
-              "mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
-              task.status === "done"
-                ? "border-brand-500 bg-brand-500 text-white"
-                : "border-gray-300 dark:border-gray-600"
-            )}
+            aria-label={task.status === "done" ? "Позначити невиконаною" : "Позначити виконаною"}
+            className="touch-target -ml-2 -mt-2 flex shrink-0 items-center justify-center rounded-full"
           >
-            {task.status === "done" && (
-              <Check className="h-3 w-3" strokeWidth={3} />
-            )}
+            <span
+              className={clsx(
+                "flex h-5 w-5 items-center justify-center rounded-full border-2",
+                task.status === "done"
+                  ? "border-brand-500 bg-brand-500 text-white"
+                  : "border-gray-300 dark:border-gray-600"
+              )}
+            >
+              {task.status === "done" && (
+                <Check className="h-3 w-3" strokeWidth={3} />
+              )}
+            </span>
           </button>
           <textarea
             value={task.title}
@@ -129,7 +183,7 @@ export function TaskDetail() {
         </div>
 
         {/* Властивості */}
-        <div className="space-y-3">
+        <div className="task-detail-fields space-y-3">
           <Row icon={<FolderOpen className="h-4 w-4" />} label="Проєкт">
             <select
               value={task.projectId ?? ""}
@@ -178,7 +232,7 @@ export function TaskDetail() {
                     key={s}
                     onClick={() => setStatus(task.id, s)}
                     className={clsx(
-                      "rounded-lg px-2 py-1 text-ios-footnote",
+                      "min-h-11 rounded-lg px-2 py-1 text-ios-footnote",
                       task.status === s
                         ? "bg-brand-500 text-white"
                         : "bg-gray-100 text-gray-500 dark:bg-gray-800"
@@ -261,7 +315,7 @@ export function TaskDetail() {
                   <button
                     key={d}
                     onClick={() => deferTask(task.id, d)}
-                    className="rounded-lg bg-gray-100 px-2 py-1 text-ios-footnote text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                    className="touch-target rounded-lg bg-gray-100 px-2 text-ios-footnote text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
                   >
                     +{d} д
                   </button>
@@ -278,7 +332,7 @@ export function TaskDetail() {
                     alert("У «Мій день» можна додати лише 5 задач.");
                 }}
                 className={clsx(
-                  "rounded-lg px-2 py-1 text-ios-footnote",
+                  "min-h-11 rounded-lg px-2 py-1 text-ios-footnote",
                   task.isMyDay
                     ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20"
                     : "bg-gray-100 text-gray-500 dark:bg-gray-800"

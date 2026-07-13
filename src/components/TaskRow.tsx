@@ -73,6 +73,7 @@ export function TaskRow({
           e.stopPropagation();
           toggleDone(task.id);
         }}
+        aria-label={done ? "Позначити невиконаною" : "Позначити виконаною"}
         className={clsx(
           "-m-1 flex shrink-0 touch-target items-center justify-center rounded-full p-2 transition-all duration-200 ease-smooth",
           done
@@ -133,8 +134,9 @@ export function TaskRow({
                 }
               }}
               title="Мій день"
+              aria-label={task.isMyDay ? "Прибрати з Мого дня" : "Додати до Мого дня"}
               className={clsx(
-                "shrink-0 rounded p-1",
+                "touch-target -my-2 flex shrink-0 items-center justify-center rounded-lg",
                 task.isMyDay
                   ? "text-amber-500"
                   : "text-gray-300 hover:text-amber-500 md:opacity-0 md:group-hover:opacity-100"
@@ -150,7 +152,8 @@ export function TaskRow({
                 setFocusTaskId(task.id);
               }}
               title="Режим фокусу — таймер 25 хв"
-              className="inline-flex shrink-0 items-center gap-0.5 rounded-lg px-1.5 py-0.5 text-ios-caption font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
+              aria-label="Запустити режим фокусу"
+              className="touch-target -my-2 inline-flex shrink-0 items-center gap-1 rounded-lg px-2 text-ios-caption font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
             >
               <Focus className="h-3.5 w-3.5" />
               <span className="hidden min-[400px]:inline">Фокус</span>

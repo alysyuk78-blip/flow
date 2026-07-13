@@ -83,6 +83,22 @@ body {
     min-height: 44px;
     min-width: 44px;
   }
+
+  @media (max-width: 767px) {
+    .task-detail-fields select,
+    .task-detail-fields input:not([type="checkbox"]):not([type="range"]) {
+      min-height: 44px;
+    }
+
+    .task-detail-fields label:has(input[type="checkbox"]) {
+      min-height: 44px;
+    }
+
+    .task-detail-fields input[type="checkbox"] {
+      height: 20px;
+      width: 20px;
+    }
+  }
 }
 
 @layer components {

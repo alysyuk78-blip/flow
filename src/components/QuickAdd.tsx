@@ -45,7 +45,7 @@ export function QuickAdd({
 
   return (
     <div>
-      <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-2 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
+      <div className="flex min-h-11 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
         <Plus className="h-4 w-4 shrink-0 text-gray-400" />
         <input
           autoFocus={autoFocus}
@@ -60,12 +60,12 @@ export function QuickAdd({
           }}
           onKeyDown={(e) => e.key === "Enter" && submit()}
           placeholder={placeholder}
-          className="min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
+          className="min-h-11 min-w-0 flex-1 bg-transparent text-ios-body outline-none placeholder:text-gray-400"
         />
         {showTemplates && (
           <button
             onClick={() => setTemplatesOpen((v) => !v)}
-            className="shrink-0 text-ios-footnote text-gray-400 hover:text-brand-500"
+            className="touch-target shrink-0 rounded-lg px-2 text-ios-footnote text-gray-400 hover:bg-gray-100 hover:text-brand-500 dark:hover:bg-gray-700"
           >
             Шаблон
           </button>

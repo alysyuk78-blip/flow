@@ -54,7 +54,8 @@ function SortableItem({
         {...attributes}
         {...listeners}
         onClick={(e) => e.stopPropagation()}
-        className="mt-3 shrink-0 cursor-grab rounded p-0.5 text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+        aria-label={`Перетягнути ${task.title}`}
+        className="touch-target mt-1 flex shrink-0 cursor-grab items-center justify-center rounded-lg text-gray-300 hover:text-gray-500 active:cursor-grabbing"
         title="Перетягнути"
       >
         <GripVertical className="h-4 w-4" />

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
 import { useStore } from "./store/useStore";
 import { Sidebar } from "./components/Sidebar";
@@ -85,6 +85,12 @@ export default function App() {
   const setSidebarOpen = useStore((s) => s.setSidebarOpen);
   const openTask = useStore((s) => s.openTask);
   const selectedIds = useStore((s) => s.selectedIds);
+  const [isDesktop, setIsDesktop] = useState(() =>
+    window.matchMedia("(min-width: 768px)").matches
+  );
+  const mobileHeaderRef = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLElement>(null);
+  const taskModalOpen = Boolean(selectedTaskId && !isDesktop);
 
   useEffect(() => {
     useStore.getState().ensureContextTags();
@@ -92,6 +98,34 @@ export default function App() {
 
   useKeyboardShortcuts();
   useReminders();
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const background = [mobileHeaderRef.current, mainRef.current];
+    for (const element of background) {
+      if (!element) continue;
+      if (taskModalOpen) {
+        element.setAttribute("inert", "");
+        element.setAttribute("aria-hidden", "true");
+      } else {
+        element.removeAttribute("inert");
+        element.removeAttribute("aria-hidden");
+      }
+    }
+    return () => {
+      for (const element of background) {
+        element?.removeAttribute("inert");
+        element?.removeAttribute("aria-hidden");
+      }
+    };
+  }, [taskModalOpen]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
@@ -138,7 +172,10 @@ export default function App() {
   return (
     <div className="app-shell flex w-full overflow-hidden bg-white text-gray-900 transition-colors duration-250 dark:bg-gray-950 dark:text-gray-100">
       {/* Мобільний заголовок */}
-      <div className="mobile-header page-gutter-x fixed left-0 right-0 top-0 z-30 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:hidden">
+      <div
+        ref={mobileHeaderRef}
+        className="mobile-header page-gutter-x fixed left-0 right-0 top-0 z-30 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 md:hidden"
+      >
         <div className="grid h-12 grid-cols-[1.5rem_1fr] items-center gap-3">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -160,7 +197,10 @@ export default function App() {
 
       <Sidebar />
 
-      <main className="mobile-main-offset min-w-0 flex-1 overflow-hidden md:pt-0">
+      <main
+        ref={mainRef}
+        className="mobile-main-offset min-w-0 flex-1 overflow-hidden md:pt-0"
+      >
         {selectedIds.length > 0 && (
           <div className="safe-x animate-slide-down border-b border-gray-200 px-3 py-2 md:hidden dark:border-gray-800">
             <BulkActionBar />
@@ -181,7 +221,7 @@ export default function App() {
           />
           <div className="safe-top safe-bottom fixed inset-0 z-50 flex flex-col overflow-hidden animate-slide-in-right max-md:m-2 max-md:max-h-[calc(100%-1rem)] max-md:rounded-lg max-md:shadow-xl md:static md:z-auto md:m-0 md:max-h-none md:w-[380px] md:shrink-0 md:rounded-none md:shadow-none">
             <Suspense fallback={null}>
-              <TaskDetail />
+              <TaskDetail isModal={taskModalOpen} />
             </Suspense>
           </div>
         </>

@@ -52,17 +52,22 @@ export function RichEditor({
 
   const Btn = ({
     active,
+    label,
     onClick,
     children,
   }: {
     active?: boolean;
+    label: string;
     onClick: () => void;
     children: React.ReactNode;
   }) => (
     <button
+      type="button"
       onClick={onClick}
+      aria-label={label}
+      title={label}
       className={clsx(
-        "rounded-lg p-1.5 text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700",
+        "touch-target flex shrink-0 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700",
         active && "bg-brand-100 text-brand-600 dark:bg-brand-500/20"
       )}
     >
@@ -75,6 +80,7 @@ export function RichEditor({
       {toolbar && (
         <div className="mb-2 flex flex-wrap items-center gap-0.5 rounded-lg border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-800">
           <Btn
+            label="Заголовок 1"
             active={editor.isActive("heading", { level: 1 })}
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
@@ -83,6 +89,7 @@ export function RichEditor({
             <Heading1 className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Заголовок 2"
             active={editor.isActive("heading", { level: 2 })}
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 2 }).run()
@@ -91,36 +98,42 @@ export function RichEditor({
             <Heading2 className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Жирний"
             active={editor.isActive("bold")}
             onClick={() => editor.chain().focus().toggleBold().run()}
           >
             <Bold className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Курсив"
             active={editor.isActive("italic")}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           >
             <Italic className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Маркований список"
             active={editor.isActive("bulletList")}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
             <List className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Нумерований список"
             active={editor.isActive("orderedList")}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrdered className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Цитата"
             active={editor.isActive("blockquote")}
             onClick={() => editor.chain().focus().toggleBlockquote().run()}
           >
             <Quote className="h-4 w-4" />
           </Btn>
           <Btn
+            label="Блок коду"
             active={editor.isActive("codeBlock")}
             onClick={() => editor.chain().focus().toggleCodeBlock().run()}
           >

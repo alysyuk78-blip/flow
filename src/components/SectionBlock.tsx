@@ -61,7 +61,9 @@ function SortableSection({
         <button
           {...attributes}
           {...listeners}
-          className="cursor-grab rounded p-0.5 text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+          aria-label={`Перетягнути розділ ${section.title}`}
+          title="Перетягнути розділ"
+          className="touch-target -ml-2 flex cursor-grab items-center justify-center rounded-lg text-gray-300 hover:text-gray-500 active:cursor-grabbing"
         >
           <GripVertical className="h-4 w-4" />
         </button>
@@ -75,7 +77,7 @@ function SortableSection({
               if (e.key === "Enter") save();
               if (e.key === "Escape") setEditing(false);
             }}
-            className="flex-1 rounded border border-brand-300 bg-transparent px-2 py-0.5 ios-form-control font-semibold outline-none dark:border-brand-500"
+            className="min-h-11 flex-1 rounded-lg border border-brand-300 bg-transparent px-2 ios-form-control font-semibold outline-none dark:border-brand-500"
           />
         ) : (
           <h3
@@ -91,8 +93,9 @@ function SortableSection({
             if (confirm(`Видалити розділ «${section.title}»?`))
               deleteSection(section.id);
           }}
-          className="rounded p-1 text-gray-300 hover:text-red-500"
           title="Видалити розділ"
+          aria-label={`Видалити розділ ${section.title}`}
+          className="touch-target -mr-2 flex items-center justify-center rounded-lg text-gray-300 hover:text-red-500"
         >
           <Trash2 className="h-3.5 w-3.5" />
         </button>

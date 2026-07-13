@@ -90,7 +90,79 @@ export function TimelineChart({
   const totalW = days.length * DAY_W;
 
   return (
-    <div className="h-full overflow-auto">
+    <>
+      <div className="h-full overflow-y-auto px-4 py-4 md:hidden">
+        {critical.size > 0 && showCritical && (
+          <div className="mb-3 flex items-center gap-2 text-ios-footnote text-amber-600 dark:text-amber-400">
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-500" />
+            Критичний шлях
+          </div>
+        )}
+        {items.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-gray-200 py-14 text-center ios-empty dark:border-gray-700">
+            Додайте задачі з датами, щоб побачити таймлайн.
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {items.map((task) => {
+              const progress = computedProgress(task);
+              const start = task.startDate ?? task.dueDate;
+              const end = task.dueDate ?? task.startDate;
+              const dateLabel = start
+                ? `${format(parseISO(start), "d MMM", { locale: uk })}${
+                    end && end !== start
+                      ? ` — ${format(parseISO(end), "d MMM", { locale: uk })}`
+                      : ""
+                  }`
+                : "Без дати";
+              const isCritical = critical.has(task.id);
+
+              return (
+                <button
+                  key={task.id}
+                  onClick={() => openTask(task.id)}
+                  className={clsx(
+                    "touch-target w-full rounded-lg border bg-white px-3 py-3 text-left dark:bg-gray-900",
+                    isCritical
+                      ? "border-amber-300 dark:border-amber-500/50"
+                      : "border-gray-200 dark:border-gray-700"
+                  )}
+                >
+                  <div className="flex items-start gap-2">
+                    <span
+                      className={clsx(
+                        "mt-1.5 h-2.5 w-2.5 shrink-0",
+                        task.kind === "milestone"
+                          ? "rotate-45 bg-amber-500"
+                          : "rounded-full bg-brand-500"
+                      )}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="break-words text-ios-body font-medium text-gray-800 dark:text-gray-100">
+                        {task.title}
+                      </div>
+                      <div className="mt-1 flex items-center justify-between gap-3 text-ios-footnote text-gray-500">
+                        <span>{dateLabel}</span>
+                        {progress > 0 && <span>{progress}%</span>}
+                      </div>
+                      {progress > 0 && progress < 100 && (
+                        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+                          <div
+                            className="h-full rounded-full bg-brand-500"
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      <div className="hidden h-full overflow-auto md:block">
       <div className="min-w-max px-6 py-4">
         {showZoom && (
           <div className="mb-3 flex items-center gap-2">
@@ -129,17 +201,17 @@ export function TimelineChart({
                 className="border-b border-gray-200 dark:border-gray-700"
               />
               {items.map((task) => (
-                <div
+                <button
                   key={task.id}
                   style={{ height: ROW_H }}
                   onClick={() => openTask(task.id)}
-                  className="flex cursor-pointer items-center gap-1 truncate border-b border-gray-100 pr-3 text-ios-body text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200"
+                  className="flex w-full items-center gap-1 truncate border-b border-gray-100 pr-3 text-left text-ios-body text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200"
                 >
                   {task.kind === "milestone" && (
                     <span className="text-amber-500">◆</span>
                   )}
                   <span className="truncate">{task.title}</span>
-                </div>
+                </button>
               ))}
             </div>
 
@@ -209,9 +281,10 @@ export function TimelineChart({
                     const cx = pos.x + pos.w / 2;
                     const cy = pos.row * ROW_H + ROW_H / 2;
                     return (
-                      <div
+                      <button
                         key={task.id}
                         onClick={() => openTask(task.id)}
+                        aria-label={task.title}
                         className="absolute cursor-pointer"
                         style={{ left: cx - 8, top: cy - 8 }}
                         title={task.title}
@@ -224,12 +297,12 @@ export function TimelineChart({
                               : "border-amber-500 bg-amber-400"
                           )}
                         />
-                      </div>
+                      </button>
                     );
                   }
 
                   return (
-                    <div
+                    <button
                       key={task.id}
                       onClick={() => openTask(task.id)}
                       className={clsx(
@@ -252,7 +325,7 @@ export function TimelineChart({
                       <span className="relative z-10 truncate px-2">
                         {task.title}
                       </span>
-                    </div>
+                    </button>
                   );
                 })}
 
@@ -304,6 +377,7 @@ export function TimelineChart({
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </>
   );
 }
