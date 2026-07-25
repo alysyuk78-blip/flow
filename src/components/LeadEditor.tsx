@@ -49,7 +49,7 @@ export function LeadEditor({ lead, onClose }: LeadEditorProps) {
   const [draft, setDraft] = useState<LeadDraft>(() =>
     lead ? toDraft(lead) : { ...EMPTY_LEAD }
   );
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLFormElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
