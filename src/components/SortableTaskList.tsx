@@ -48,14 +48,14 @@ function SortableItem({
     <div
       ref={setNodeRef}
       style={style}
-      className={clsx("flex items-start gap-1 transition-opacity duration-200", isDragging && "opacity-50")}
+      className={clsx("group/sortable flex items-start gap-1 transition-opacity duration-200", isDragging && "opacity-50")}
     >
       <button
         {...attributes}
         {...listeners}
         onClick={(e) => e.stopPropagation()}
         aria-label={`Перетягнути ${task.title}`}
-        className="touch-target mt-1 flex shrink-0 cursor-grab items-center justify-center rounded-lg text-gray-300 hover:text-gray-500 active:cursor-grabbing"
+        className="touch-target mt-1 flex shrink-0 cursor-grab items-center justify-center rounded-lg text-gray-300 hover:text-gray-500 focus-visible:opacity-100 active:cursor-grabbing md:opacity-0 md:group-hover/sortable:opacity-100"
         title="Перетягнути"
       >
         <GripVertical className="h-4 w-4" />

@@ -12,7 +12,7 @@ import {
   Flame,
   Clock,
 } from "lucide-react";
-import { Task } from "../types";
+import { Tag, Task } from "../types";
 import { useStore } from "../store/useStore";
 import { humanDate, isOverdue } from "../lib/dates";
 import { computedProgress } from "../lib/filters";
@@ -41,22 +41,30 @@ export function TaskRow({
   const project = projects.find((p) => p.id === task.projectId);
   const taskTags = task.tagIds
     .map((id) => tags.find((t) => t.id === id))
-    .filter(Boolean);
+    .filter((tag): tag is Tag => Boolean(tag));
+  const aiTag = taskTags.find((tag) => tag.name === "AI");
+  const manualTag = taskTags.find((tag) => tag.name === "Власноруч");
+  const hasAi = Boolean(aiTag);
+  const hasManual = Boolean(manualTag);
+  const displayTags = taskTags.filter(
+    (tag) => tag.name !== "AI" && tag.name !== "Власноруч"
+  );
   const subDone = task.subtasks.filter((s) => s.done).length;
   const progress = computedProgress(task);
   const bulkSelected = selectedIds.includes(task.id);
+  const isSelectionMode = useStore((s) => s.isSelectionMode);
 
   return (
     <div
       onClick={() => openTask(task.id)}
       className={clsx(
-        "group flex cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-3 transition-all duration-200 ease-smooth xs:gap-3 xs:px-3 xs:py-2.5",
+        "group flex cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2.5 transition-all duration-200 ease-smooth xs:gap-3 xs:px-3 xs:py-2",
         selectedTaskId === task.id || bulkSelected
           ? "border-brand-300 bg-brand-50 dark:border-brand-500/40 dark:bg-brand-500/10"
           : "border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/60"
       )}
     >
-      {selectable && (
+      {selectable && isSelectionMode && (
         <label className="touch-target -m-1 flex shrink-0 items-center justify-center p-2">
           <input
             type="checkbox"
@@ -113,9 +121,6 @@ export function TaskRow({
           {task.recurrence !== "none" && (
             <Repeat className="h-3 w-3 shrink-0 text-gray-400" strokeWidth={1.5} />
           )}
-          {task.isMyDay && !done && (
-            <Sun className="h-3 w-3 shrink-0 text-amber-500" strokeWidth={1.5} />
-          )}
           {task.waitingFor && (
             <Hourglass className="h-3 w-3 shrink-0 text-orange-400" strokeWidth={1.5} />
           )}
@@ -153,15 +158,14 @@ export function TaskRow({
               }}
               title="Режим фокусу — таймер 25 хв"
               aria-label="Запустити режим фокусу"
-              className="touch-target -my-2 inline-flex shrink-0 items-center gap-1 rounded-lg px-2 text-ios-caption font-medium text-brand-500 hover:bg-brand-50 dark:hover:bg-brand-500/10"
+              className="touch-target -my-2 inline-flex shrink-0 items-center justify-center rounded-lg px-2 text-brand-500 hover:bg-brand-50 focus-visible:opacity-100 dark:hover:bg-brand-500/10 md:opacity-0 md:group-hover:opacity-100"
             >
               <Focus className="h-3.5 w-3.5" />
-              <span className="hidden min-[400px]:inline">Фокус</span>
             </button>
           )}
         </div>
 
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-ios-footnote text-gray-500">
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-ios-footnote text-gray-600 dark:text-gray-400">
           {showProject && project && (
             <span className="inline-flex max-w-full items-center gap-1 truncate">
               <Folder className="h-3 w-3 shrink-0" strokeWidth={1.5} />
@@ -198,8 +202,13 @@ export function TaskRow({
               {subDone}/{task.subtasks.length}
             </span>
           )}
-          {taskTags.map((t) => (
-            <TagChip key={t!.id} tag={t!} />
+          {hasAi && hasManual && (
+            <TagChip tag={{ id: "shared-work", name: "Спільно", color: "#8b5cf6", kind: "label" }} />
+          )}
+          {hasAi && !hasManual && aiTag && <TagChip tag={aiTag} />}
+          {hasManual && !hasAi && manualTag && <TagChip tag={manualTag} />}
+          {displayTags.map((tag) => (
+            <TagChip key={tag.id} tag={tag} />
           ))}
         </div>
 

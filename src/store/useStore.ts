@@ -188,6 +188,7 @@ interface State {
 
   sidebarOpen: boolean;
   showArchivedProjects: boolean;
+  isSelectionMode: boolean;
   selectedIds: string[];
   undo: UndoSnapshot | null;
   focusTaskId: string | null;
@@ -206,6 +207,7 @@ interface State {
   setQuickAddOpen: (open: boolean) => void;
   setSidebarOpen: (open: boolean) => void;
   setShowArchivedProjects: (show: boolean) => void;
+  setSelectionMode: (enabled: boolean) => void;
   setFocusTaskId: (id: string | null) => void;
   setActiveContextTagId: (id: string | null) => void;
 
@@ -346,6 +348,7 @@ export const useStore = create<State>()(
 
       sidebarOpen: false,
       showArchivedProjects: false,
+      isSelectionMode: false,
       selectedIds: [],
       undo: null,
       focusTaskId: null,
@@ -357,6 +360,7 @@ export const useStore = create<State>()(
           selectedTaskId: null,
           searchQuery: "",
           selectedIds: [],
+          isSelectionMode: false,
           sidebarOpen: false,
         }),
       openTask: (id) => set({ selectedTaskId: id }),
@@ -373,6 +377,8 @@ export const useStore = create<State>()(
       setQuickAddOpen: (open) => set({ quickAddOpen: open }),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
       setShowArchivedProjects: (show) => set({ showArchivedProjects: show }),
+      setSelectionMode: (enabled) =>
+        set({ isSelectionMode: enabled, selectedIds: enabled ? get().selectedIds : [] }),
       setFocusTaskId: (id) => set({ focusTaskId: id }),
       setActiveContextTagId: (id) => set({ activeContextTagId: id }),
 
@@ -383,7 +389,7 @@ export const useStore = create<State>()(
             : [...s.selectedIds, id],
         })),
       setSelectedIds: (ids) => set({ selectedIds: ids }),
-      clearSelection: () => set({ selectedIds: [] }),
+      clearSelection: () => set({ selectedIds: [], isSelectionMode: false }),
 
       bulkComplete: () =>
         set((s) => {
@@ -400,7 +406,7 @@ export const useStore = create<State>()(
           for (const id of s.selectedIds) {
             tasks = handleRecurrence(tasks, id);
           }
-          return { tasks, selectedIds: [] };
+          return { tasks, selectedIds: [], isSelectionMode: false };
         }),
 
       bulkDelete: () => {
@@ -412,6 +418,7 @@ export const useStore = create<State>()(
           undo: { tasks: removed },
           tasks: removeTasksFromState(tasks, idSet),
           selectedIds: [],
+          isSelectionMode: false,
           selectedTaskId: selectedIds.includes(get().selectedTaskId ?? "")
             ? null
             : get().selectedTaskId,

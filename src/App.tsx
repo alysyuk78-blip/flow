@@ -5,7 +5,6 @@ import { Sidebar } from "./components/Sidebar";
 import { HelpModal } from "./components/HelpModal";
 import { UndoToast } from "./components/UndoToast";
 import { FocusMode } from "./components/FocusMode";
-import { BulkActionBar } from "./components/BulkActionBar";
 import { DataSafetyNotice } from "./components/DataSafetyNotice";
 import { useKeyboardShortcuts } from "./hooks/useKeyboardShortcuts";
 import { useReminders } from "./hooks/useReminders";
@@ -89,7 +88,6 @@ export default function App() {
   const sidebarOpen = useStore((s) => s.sidebarOpen);
   const setSidebarOpen = useStore((s) => s.setSidebarOpen);
   const openTask = useStore((s) => s.openTask);
-  const selectedIds = useStore((s) => s.selectedIds);
   const [isDesktop, setIsDesktop] = useState(() =>
     window.matchMedia("(min-width: 768px)").matches
   );
@@ -208,11 +206,6 @@ export default function App() {
         ref={mainRef}
         className="mobile-main-offset min-w-0 flex-1 overflow-hidden md:pt-0"
       >
-        {selectedIds.length > 0 && (
-          <div className="safe-x animate-slide-down border-b border-gray-200 px-3 py-2 md:hidden dark:border-gray-800">
-            <BulkActionBar />
-          </div>
-        )}
         <div key={viewKey} className="h-full overflow-y-auto overscroll-contain animate-fade-in">
           <Suspense fallback={<ViewFallback />}>
             {mainContent()}

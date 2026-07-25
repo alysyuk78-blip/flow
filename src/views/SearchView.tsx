@@ -2,6 +2,7 @@ import { Search, SearchX } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SortableTaskList } from "../components/SortableTaskList";
 import { SearchFilterBar } from "../components/SearchFilterBar";
+import { BulkActionBar } from "../components/BulkActionBar";
 import { byOrder } from "../lib/filters";
 
 function stripHtml(html: string): string {
@@ -56,6 +57,7 @@ export function SearchView() {
       </div>
 
       <SearchFilterBar />
+      <BulkActionBar />
 
       {results.length === 0 ? (
         <div className="rounded-lg border border-dashed border-gray-200 py-16 text-center text-gray-400 dark:border-gray-700">
