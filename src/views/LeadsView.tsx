@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import {
   CalendarClock,
+  ListPlus,
   Mail,
   Pencil,
   Phone,
@@ -45,6 +46,10 @@ const selectClass =
 export function LeadsView() {
   const leads = useStore((state) => state.leads);
   const updateLead = useStore((state) => state.updateLead);
+  const createLeadFollowUpTask = useStore(
+    (state) => state.createLeadFollowUpTask
+  );
+  const openTask = useStore((state) => state.openTask);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<LeadFilter<LeadStatus>>("any");
   const [source, setSource] = useState<LeadFilter<LeadSource>>("any");
@@ -214,7 +219,7 @@ export function LeadsView() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-lg border border-gray-200 dark:border-gray-800">
-          <div className="hidden grid-cols-[minmax(12rem,1.4fr)_minmax(9rem,1fr)_minmax(10rem,1fr)_10rem_2.75rem] gap-3 bg-gray-50 px-4 py-2 ios-section-label md:grid dark:bg-gray-900">
+          <div className="hidden grid-cols-[minmax(12rem,1.4fr)_minmax(9rem,1fr)_minmax(10rem,1fr)_10rem_5.5rem] gap-3 bg-gray-50 px-4 py-2 ios-section-label md:grid dark:bg-gray-900">
             <span>Клієнт</span>
             <span>Джерело</span>
             <span>Наступна дія</span>
@@ -231,7 +236,7 @@ export function LeadsView() {
               return (
                 <article
                   key={lead.id}
-                  className="grid gap-3 bg-white px-4 py-3 md:grid-cols-[minmax(12rem,1.4fr)_minmax(9rem,1fr)_minmax(10rem,1fr)_10rem_2.75rem] md:items-center dark:bg-gray-950"
+                  className="grid gap-3 bg-white px-4 py-3 md:grid-cols-[minmax(12rem,1.4fr)_minmax(9rem,1fr)_minmax(10rem,1fr)_10rem_5.5rem] md:items-center dark:bg-gray-950"
                 >
                   <div className="min-w-0">
                     <button
@@ -323,15 +328,34 @@ export function LeadsView() {
                     ))}
                   </select>
 
-                  <button
-                    type="button"
-                    onClick={() => setEditing(lead)}
-                    aria-label={`Редагувати ${lead.name}`}
-                    title="Редагувати"
-                    className="touch-target flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-brand-500 dark:hover:bg-gray-800"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
+                  <div className="flex items-center justify-end gap-1">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const taskId = createLeadFollowUpTask(lead.id);
+                        if (taskId) openTask(taskId);
+                      }}
+                      disabled={!lead.nextAction.trim()}
+                      aria-label={`Відкрити наступну задачу для ${lead.name}`}
+                      title={
+                        lead.nextAction.trim()
+                          ? "Відкрити наступну задачу"
+                          : "Спочатку вкажіть наступну дію"
+                      }
+                      className="touch-target flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-brand-500 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-gray-800"
+                    >
+                      <ListPlus className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setEditing(lead)}
+                      aria-label={`Редагувати ${lead.name}`}
+                      title="Редагувати"
+                      className="touch-target flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-brand-500 dark:hover:bg-gray-800"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </button>
+                  </div>
                 </article>
               );
             })}

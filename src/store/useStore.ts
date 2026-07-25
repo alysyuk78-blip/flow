@@ -131,6 +131,7 @@ function normalizeLead(raw: Lead & Record<string, unknown>): Lead {
     status: raw.status ?? "new",
     nextAction: raw.nextAction ?? "",
     nextActionDate: raw.nextActionDate ?? null,
+    followUpTaskId: raw.followUpTaskId ?? null,
     estimatedValue: raw.estimatedValue ?? null,
     model: raw.model ?? "",
     quantity: raw.quantity ?? null,
@@ -268,6 +269,7 @@ interface State {
   addLead: (partial: Partial<Lead> & { name: string }) => string;
   updateLead: (id: string, patch: Partial<Lead>) => void;
   deleteLead: (id: string) => void;
+  createLeadFollowUpTask: (id: string) => string | null;
   importAvalonPlan: () => AvalonPlanImportResult;
 
   resetAll: () => void;
@@ -955,6 +957,7 @@ export const useStore = create<State>()(
           status: partial.status ?? "new",
           nextAction: partial.nextAction ?? "",
           nextActionDate: partial.nextActionDate ?? null,
+          followUpTaskId: partial.followUpTaskId ?? null,
           estimatedValue: partial.estimatedValue ?? null,
           model: partial.model ?? "",
           quantity: partial.quantity ?? null,
@@ -968,21 +971,67 @@ export const useStore = create<State>()(
       },
 
       updateLead: (id, patch) =>
-        set((s) => ({
-          leads: s.leads.map((lead) =>
-            lead.id === id
-              ? {
-                  ...lead,
-                  ...patch,
-                  id: lead.id,
-                  updatedAt: new Date().toISOString(),
-                }
-              : lead
-          ),
-        })),
+        set((s) => {
+          const current = s.leads.find((lead) => lead.id === id);
+          const leadName = patch.name ?? current?.name ?? "";
+          const nextAction = patch.nextAction ?? current?.nextAction ?? "";
+          const nextActionDate = patch.nextActionDate ?? current?.nextActionDate ?? null;
+          const shouldSyncTask = Boolean(
+            current?.followUpTaskId && nextAction.trim()
+          );
+
+          return {
+            leads: s.leads.map((lead) =>
+              lead.id === id
+                ? {
+                    ...lead,
+                    ...patch,
+                    id: lead.id,
+                    updatedAt: new Date().toISOString(),
+                  }
+                : lead
+            ),
+            tasks: shouldSyncTask
+              ? s.tasks.map((task) =>
+                  task.id === current!.followUpTaskId && task.status !== "done"
+                    ? {
+                        ...task,
+                        title: `Лід: ${leadName} — ${nextAction.trim()}`,
+                        dueDate: nextActionDate,
+                        reminder: Boolean(nextActionDate),
+                      }
+                    : task
+                )
+              : s.tasks,
+          };
+        }),
 
       deleteLead: (id) =>
         set((s) => ({ leads: s.leads.filter((lead) => lead.id !== id) })),
+
+      createLeadFollowUpTask: (id) => {
+        const lead = get().leads.find((item) => item.id === id);
+        if (!lead || !lead.nextAction.trim()) return null;
+
+        const activeTask = lead.followUpTaskId
+          ? get().tasks.find(
+              (task) => task.id === lead.followUpTaskId && task.status !== "done"
+            )
+          : undefined;
+        if (activeTask) return activeTask.id;
+
+        const contact = [lead.company, lead.phone || lead.telegram, lead.email]
+          .filter(Boolean)
+          .join(" · ");
+        const taskId = get().addTask({
+          title: `Лід: ${lead.name} — ${lead.nextAction.trim()}`,
+          notes: [contact, lead.notes].filter(Boolean).join("\n\n"),
+          dueDate: lead.nextActionDate,
+          reminder: Boolean(lead.nextActionDate),
+        });
+        get().updateLead(id, { followUpTaskId: taskId });
+        return taskId;
+      },
 
       importAvalonPlan: () => {
         const existing = get().projects.find(

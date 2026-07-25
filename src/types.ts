@@ -126,6 +126,7 @@ export interface Lead {
   status: LeadStatus;
   nextAction: string;
   nextActionDate: string | null;
+  followUpTaskId: string | null;
   estimatedValue: number | null;
   model: string;
   quantity: number | null;
