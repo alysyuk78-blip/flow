@@ -6,6 +6,34 @@ export type Recurrence = "none" | "daily" | "weekly" | "monthly" | "yearly";
 export type TaskKind = "task" | "milestone";
 export type TimelineZoom = "week" | "month" | "quarter";
 export type TagKind = "label" | "context";
+export type LeadStatus =
+  | "new"
+  | "contacted"
+  | "qualified"
+  | "proposal"
+  | "negotiation"
+  | "won"
+  | "lost";
+export type LeadSource =
+  | "facebook"
+  | "instagram"
+  | "olx"
+  | "google"
+  | "osbb"
+  | "installer"
+  | "developer"
+  | "architect"
+  | "print"
+  | "referral"
+  | "other";
+export type LeadKind =
+  | "b2c"
+  | "osbb"
+  | "installer"
+  | "developer"
+  | "architect"
+  | "dropshipper"
+  | "business";
 
 export interface Subtask {
   id: string;
@@ -85,6 +113,28 @@ export interface Project {
   areaId: string | null;
 }
 
+export interface Lead {
+  id: string;
+  name: string;
+  company: string;
+  phone: string;
+  telegram: string;
+  email: string;
+  kind: LeadKind;
+  source: LeadSource;
+  partnerCode: string;
+  status: LeadStatus;
+  nextAction: string;
+  nextActionDate: string | null;
+  estimatedValue: number | null;
+  model: string;
+  quantity: number | null;
+  city: string;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type ProjectViewKind = "list" | "board" | "timeline" | "notes" | "calendar";
 
 export type SmartList =
@@ -100,7 +150,8 @@ export type SmartList =
   | "calendar"
   | "stats"
   | "weeklyReview"
-  | "matrix";
+  | "matrix"
+  | "leads";
 
 export type Selection =
   | { kind: "smart"; list: SmartList }
@@ -127,6 +178,50 @@ export interface UndoSnapshot {
 }
 
 export const MY_DAY_LIMIT = 5;
+
+export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
+  new: "Новий",
+  contacted: "Контакт встановлено",
+  qualified: "Кваліфікований",
+  proposal: "Пропозиція надіслана",
+  negotiation: "Переговори",
+  won: "Замовлення",
+  lost: "Втрачений",
+};
+
+export const LEAD_STATUS_ORDER: LeadStatus[] = [
+  "new",
+  "contacted",
+  "qualified",
+  "proposal",
+  "negotiation",
+  "won",
+  "lost",
+];
+
+export const LEAD_SOURCE_LABELS: Record<LeadSource, string> = {
+  facebook: "Facebook",
+  instagram: "Instagram",
+  olx: "OLX",
+  google: "Google",
+  osbb: "ОСББ / керуюча компанія",
+  installer: "Монтажник",
+  developer: "Забудовник",
+  architect: "Архітектор / дизайнер",
+  print: "Друковане оголошення",
+  referral: "Рекомендація",
+  other: "Інше",
+};
+
+export const LEAD_KIND_LABELS: Record<LeadKind, string> = {
+  b2c: "Приватний клієнт",
+  osbb: "ОСББ / керуюча компанія",
+  installer: "Монтажник",
+  developer: "Забудовник",
+  architect: "Архітектор / дизайнер",
+  dropshipper: "Дропшипер",
+  business: "Інший бізнес",
+};
 
 export const CONTEXT_TAG_PRESETS: { name: string; color: string }[] = [
   { name: "@дім", color: "#22c55e" },

@@ -106,6 +106,7 @@ export function useBackupReminder() {
   const tasks = useStore((s) => s.tasks);
   const tags = useStore((s) => s.tags);
   const areas = useStore((s) => s.areas);
+  const leads = useStore((s) => s.leads);
   const [backupDue, setBackupDue] = useState(false);
 
   useEffect(() => {
@@ -129,7 +130,7 @@ export function useBackupReminder() {
 
   function downloadBackup() {
     const data = JSON.stringify(
-      { projects, sections, tasks, tags, areas },
+      { projects, sections, tasks, tags, areas, leads },
       null,
       2
     );

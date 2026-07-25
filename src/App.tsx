@@ -60,6 +60,11 @@ const StatsView = lazy(() =>
     default: module.StatsView,
   }))
 );
+const LeadsView = lazy(() =>
+  import("./views/LeadsView").then((module) => ({
+    default: module.LeadsView,
+  }))
+);
 
 function ViewFallback() {
   return (
@@ -158,6 +163,8 @@ export default function App() {
         return <WeeklyReviewView />;
       case "matrix":
         return <MatrixView />;
+      case "leads":
+        return <LeadsView />;
       default:
         return <SmartListView list={selection.list} />;
     }

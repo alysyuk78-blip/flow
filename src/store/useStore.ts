@@ -4,6 +4,7 @@ import { nanoid } from "nanoid";
 import { addDays, format, parseISO } from "date-fns";
 import {
   Area,
+  Lead,
   Project,
   ProjectSection,
   Selection,
@@ -32,6 +33,7 @@ import {
 import { TASK_TEMPLATES } from "./taskTemplates";
 import { todayISO } from "../lib/dates";
 import { wouldCreateCycle } from "../lib/dependencies";
+import { AVALON_PLAN_TEMPLATE } from "./avalonPlan";
 
 const PERSIST_KEY = "flow-store-v2";
 const RECOVERY_NOTICE_KEY = "flow-storage-recovered";
@@ -114,6 +116,48 @@ function normalizeProject(raw: Project & Record<string, unknown>): Project {
   };
 }
 
+function normalizeLead(raw: Lead & Record<string, unknown>): Lead {
+  const now = new Date().toISOString();
+  return {
+    id: raw.id ?? nanoid(),
+    name: raw.name ?? "",
+    company: raw.company ?? "",
+    phone: raw.phone ?? "",
+    telegram: raw.telegram ?? "",
+    email: raw.email ?? "",
+    kind: raw.kind ?? "b2c",
+    source: raw.source ?? "other",
+    partnerCode: raw.partnerCode ?? "",
+    status: raw.status ?? "new",
+    nextAction: raw.nextAction ?? "",
+    nextActionDate: raw.nextActionDate ?? null,
+    estimatedValue: raw.estimatedValue ?? null,
+    model: raw.model ?? "",
+    quantity: raw.quantity ?? null,
+    city: raw.city ?? "",
+    notes: raw.notes ?? "",
+    createdAt: raw.createdAt ?? now,
+    updatedAt: raw.updatedAt ?? raw.createdAt ?? now,
+  };
+}
+
+function plainTextToHtml(value: string): string {
+  const escaped = value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return escaped
+    .split(/\n{2,}/)
+    .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br>")}</p>`)
+    .join("");
+}
+
+type AvalonPlanImportResult = {
+  imported: boolean;
+  projectId: string;
+  taskCount: number;
+};
+
 function updateStreakOnComplete(task: Task): Partial<Task> {
   if (task.recurrence === "none") return {};
   const today = todayISO();
@@ -130,6 +174,7 @@ interface State {
   tasks: Task[];
   tags: Tag[];
   areas: Area[];
+  leads: Lead[];
 
   selection: Selection;
   selectedTaskId: string | null;
@@ -218,6 +263,11 @@ interface State {
   ensureContextTags: () => void;
   deleteTag: (id: string) => void;
 
+  addLead: (partial: Partial<Lead> & { name: string }) => string;
+  updateLead: (id: string, patch: Partial<Lead>) => void;
+  deleteLead: (id: string) => void;
+  importAvalonPlan: () => AvalonPlanImportResult;
+
   resetAll: () => void;
   importData: (data: {
     projects: Project[];
@@ -225,6 +275,7 @@ interface State {
     tasks: Task[];
     tags: Tag[];
     areas?: Area[];
+    leads?: Lead[];
   }) => void;
   importIcalTasks: (tasks: Partial<Task>[]) => void;
 }
@@ -281,6 +332,7 @@ export const useStore = create<State>()(
       tasks: seed.tasks,
       tags: seed.tags,
       areas: seed.areas ?? [],
+      leads: [],
 
       selection: { kind: "smart", list: "today" },
       selectedTaskId: null,
@@ -880,6 +932,197 @@ export const useStore = create<State>()(
           })),
         })),
 
+      addLead: (partial) => {
+        const id = nanoid();
+        const now = new Date().toISOString();
+        const lead: Lead = {
+          id,
+          name: partial.name,
+          company: partial.company ?? "",
+          phone: partial.phone ?? "",
+          telegram: partial.telegram ?? "",
+          email: partial.email ?? "",
+          kind: partial.kind ?? "b2c",
+          source: partial.source ?? "other",
+          partnerCode: partial.partnerCode ?? "",
+          status: partial.status ?? "new",
+          nextAction: partial.nextAction ?? "",
+          nextActionDate: partial.nextActionDate ?? null,
+          estimatedValue: partial.estimatedValue ?? null,
+          model: partial.model ?? "",
+          quantity: partial.quantity ?? null,
+          city: partial.city ?? "",
+          notes: partial.notes ?? "",
+          createdAt: now,
+          updatedAt: now,
+        };
+        set((s) => ({ leads: [lead, ...s.leads] }));
+        return id;
+      },
+
+      updateLead: (id, patch) =>
+        set((s) => ({
+          leads: s.leads.map((lead) =>
+            lead.id === id
+              ? {
+                  ...lead,
+                  ...patch,
+                  id: lead.id,
+                  updatedAt: new Date().toISOString(),
+                }
+              : lead
+          ),
+        })),
+
+      deleteLead: (id) =>
+        set((s) => ({ leads: s.leads.filter((lead) => lead.id !== id) })),
+
+      importAvalonPlan: () => {
+        const existing = get().projects.find(
+          (project) => project.name === AVALON_PLAN_TEMPLATE.name
+        );
+        if (existing) {
+          set({
+            selection: { kind: "project", projectId: existing.id },
+            sidebarOpen: false,
+          });
+          return {
+            imported: false,
+            projectId: existing.id,
+            taskCount: get().tasks.filter(
+              (task) => task.projectId === existing.id
+            ).length,
+          };
+        }
+
+        const state = get();
+        const now = new Date().toISOString();
+        const area =
+          state.areas.find(
+            (item) =>
+              item.name.toLocaleLowerCase("uk") ===
+              AVALON_PLAN_TEMPLATE.area.toLocaleLowerCase("uk")
+          ) ?? {
+            id: nanoid(),
+            name: AVALON_PLAN_TEMPLATE.area,
+            color: AVALON_PLAN_TEMPLATE.color,
+            order: state.areas.length,
+          };
+        const areas = state.areas.some((item) => item.id === area.id)
+          ? state.areas
+          : [...state.areas, area];
+
+        const tagColors: Record<string, string> = {
+          AI: "#0ea5e9",
+          "Власноруч": "#f59e0b",
+          "Робота": "#16a34a",
+          "Важливе": "#ef4444",
+          "забудовники": "#8b5cf6",
+        };
+        const tags = [...state.tags];
+        const tagIdsByName = new Map(
+          tags.map((tag) => [tag.name.toLocaleLowerCase("uk"), tag.id])
+        );
+        for (const item of AVALON_PLAN_TEMPLATE.items) {
+          if (item.kind !== "task") continue;
+          for (const name of item.tags) {
+            const key = name.toLocaleLowerCase("uk");
+            if (tagIdsByName.has(key)) continue;
+            const id = nanoid();
+            tags.push({
+              id,
+              name,
+              color: tagColors[name] ?? "#64748b",
+              kind: "label",
+            });
+            tagIdsByName.set(key, id);
+          }
+        }
+
+        const projectId = nanoid();
+        const project: Project = {
+          id: projectId,
+          name: AVALON_PLAN_TEMPLATE.name,
+          color: AVALON_PLAN_TEMPLATE.color,
+          notes: plainTextToHtml(AVALON_PLAN_TEMPLATE.notes),
+          archived: false,
+          order: state.projects.length,
+          createdAt: now,
+          areaId: area.id,
+        };
+        const sections: ProjectSection[] = [];
+        const tasks: Task[] = [];
+        let sectionId: string | null = null;
+
+        for (const item of AVALON_PLAN_TEMPLATE.items) {
+          if (item.kind === "section") {
+            const nextSectionId = nanoid();
+            sectionId = nextSectionId;
+            sections.push({
+              id: nextSectionId,
+              projectId,
+              title: item.title,
+              order: sections.length,
+            });
+            continue;
+          }
+
+          const important = item.tags.includes("Важливе");
+          tasks.push({
+            id: nanoid(),
+            kind: "task",
+            title: item.title,
+            notes: plainTextToHtml(item.notes),
+            projectId,
+            sectionId,
+            status: "todo",
+            priority: important ? "high" : "none",
+            tagIds: item.tags
+              .map((name) =>
+                tagIdsByName.get(name.toLocaleLowerCase("uk"))
+              )
+              .filter((id): id is string => Boolean(id)),
+            startDate: item.startDate,
+            dueDate: item.dueDate,
+            deferUntil: null,
+            isMyDay: false,
+            timeEstimateMinutes: null,
+            important,
+            urgent: false,
+            waitingFor: null,
+            streakCount: 0,
+            lastStreakDate: null,
+            recurrence: "none",
+            reminder: false,
+            reminderTime: null,
+            reminderDaysBefore: 0,
+            subtasks: item.checklist.map((title) => ({
+              id: nanoid(),
+              title,
+              done: false,
+            })),
+            dependsOn: [],
+            progress: 0,
+            order: tasks.length,
+            createdAt: now,
+            completedAt: null,
+          });
+        }
+
+        set({
+          projects: [...state.projects, project],
+          sections: [...state.sections, ...sections],
+          tasks: [...state.tasks, ...tasks],
+          tags,
+          areas,
+          selection: { kind: "project", projectId },
+          selectedTaskId: null,
+          searchQuery: "",
+          sidebarOpen: false,
+        });
+        return { imported: true, projectId, taskCount: tasks.length };
+      },
+
       resetAll: () => {
         const fresh = makeSeed();
         set({
@@ -888,6 +1131,7 @@ export const useStore = create<State>()(
           tasks: fresh.tasks,
           tags: fresh.tags,
           areas: fresh.areas ?? [],
+          leads: [],
           selection: { kind: "smart", list: "today" },
           selectedTaskId: null,
           filters: { ...DEFAULT_FILTERS },
@@ -919,6 +1163,9 @@ export const useStore = create<State>()(
             normalizeTag(t as Tag & Record<string, unknown>)
           ),
           areas: data.areas ?? [],
+          leads: (data.leads ?? []).map((lead) =>
+            normalizeLead(lead as Lead & Record<string, unknown>)
+          ),
           selection: { kind: "smart", list: "today" },
           selectedTaskId: null,
           searchQuery: "",
@@ -935,7 +1182,7 @@ export const useStore = create<State>()(
     }),
     {
       name: PERSIST_KEY,
-      version: 4,
+      version: 5,
       migrate: (persisted: unknown) => {
         const s = persisted as State;
         if (!s) return persisted;
@@ -965,6 +1212,9 @@ export const useStore = create<State>()(
         return {
           ...s,
           areas: s.areas ?? [],
+          leads: (s.leads ?? []).map((lead) =>
+            normalizeLead(lead as Lead & Record<string, unknown>)
+          ),
           sections: s.sections ?? [],
           filters: s.filters ?? { ...DEFAULT_FILTERS },
           timelineZoom: s.timelineZoom ?? "month",
@@ -987,6 +1237,7 @@ export const useStore = create<State>()(
         tasks: s.tasks,
         tags: s.tags,
         areas: s.areas,
+        leads: s.leads,
         theme: s.theme,
         timelineZoom: s.timelineZoom,
       }),

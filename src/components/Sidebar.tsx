@@ -28,6 +28,8 @@ import {
   LayoutGrid,
   Hourglass,
   MapPin,
+  Sparkles,
+  UsersRound,
 } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SmartList } from "../types";
@@ -65,6 +67,7 @@ export function Sidebar() {
   const setTheme = useStore((s) => s.setTheme);
   const tags = useStore((s) => s.tags);
   const areas = useStore((s) => s.areas);
+  const leads = useStore((s) => s.leads);
   const addArea = useStore((s) => s.addArea);
   const activeContextTagId = useStore((s) => s.activeContextTagId);
   const setActiveContextTagId = useStore((s) => s.setActiveContextTagId);
@@ -73,6 +76,7 @@ export function Sidebar() {
   const setSearchQuery = useStore((s) => s.setSearchQuery);
   const setHelpOpen = useStore((s) => s.setHelpOpen);
   const importData = useStore((s) => s.importData);
+  const importAvalonPlan = useStore((s) => s.importAvalonPlan);
 
   const [adding, setAdding] = useState(false);
   const [addingArea, setAddingArea] = useState(false);
@@ -118,7 +122,7 @@ export function Sidebar() {
 
   function exportBackup() {
     const data = JSON.stringify(
-      { projects, sections, tasks, tags, areas },
+      { projects, sections, tasks, tags, areas, leads },
       null,
       2
     );
@@ -126,6 +130,30 @@ export function Sidebar() {
       data,
       `flow-backup-${new Date().toISOString().slice(0, 10)}.json`,
       "application/json"
+    );
+  }
+
+  function handleAvalonPlanImport() {
+    const alreadyImported = projects.some(
+      (project) =>
+        project.name === "Кошики кондиціонерів — активний план лідів 30 днів"
+    );
+    if (alreadyImported) {
+      importAvalonPlan();
+      alert("План AVALON уже є у Flow. Відкриваю його без створення дубля.");
+      return;
+    }
+    if (
+      !confirm(
+        "Додати план AVALON із 31 задачею, дедлайнами, чек-листами й готовими текстами? Поточні дані залишаться без змін."
+      )
+    ) {
+      return;
+    }
+    exportBackup();
+    const result = importAvalonPlan();
+    alert(
+      `План AVALON додано: ${result.taskCount} задач. Резервну копію попередніх даних завантажено.`
     );
   }
 
@@ -202,6 +230,7 @@ export function Sidebar() {
     someday: somedayTasks(tasks).length,
     waiting: waitingTasks(tasks).length,
     logbook: logbookTasks(tasks).length,
+    leads: leads.length,
   };
 
   const smartItems: {
@@ -209,6 +238,11 @@ export function Sidebar() {
     label: string;
     icon: React.ReactNode;
   }[] = [
+    {
+      id: "leads",
+      label: "Ліди",
+      icon: <UsersRound className="h-4 w-4" />,
+    },
     { id: "inbox", label: "Вхідні", icon: <Inbox className="h-4 w-4" /> },
     { id: "myDay", label: "Мій день", icon: <Sun className="h-4 w-4" /> },
     { id: "today", label: "Сьогодні", icon: <Star className="h-4 w-4" /> },
@@ -614,6 +648,17 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-gray-200 px-3 py-2.5 dark:border-gray-800">
+        <button
+          type="button"
+          onClick={handleAvalonPlanImport}
+          className="mb-1 flex min-h-10 w-full items-center gap-2 rounded-lg px-2 text-left text-ios-footnote font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-300 dark:hover:bg-brand-500/10"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span className="flex-1">План AVALON</span>
+          <span className="text-ios-caption font-normal text-gray-400">
+            без заміни даних
+          </span>
+        </button>
         <div className="flex flex-wrap items-center gap-1">
           <button
             onClick={exportBackup}
