@@ -49,6 +49,7 @@ export function QuickAdd({
         <Plus className="h-4 w-4 shrink-0 text-gray-400" />
         <input
           autoFocus={autoFocus}
+          aria-label={placeholder}
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);

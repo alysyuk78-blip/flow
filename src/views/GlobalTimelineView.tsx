@@ -27,7 +27,11 @@ export function GlobalTimelineView() {
         </div>
       </div>
       <div className="min-h-0 flex-1">
-        <TimelineChart items={items} />
+        <TimelineChart
+          items={items}
+          showCritical={false}
+          showDependencies={false}
+        />
       </div>
     </div>
   );

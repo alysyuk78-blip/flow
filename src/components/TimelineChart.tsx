@@ -19,7 +19,7 @@ import { todayISO } from "../lib/dates";
 import { useStore } from "../store/useStore";
 
 const ROW_H = 44;
-const LABEL_W = 200;
+const LABEL_W = 280;
 const ZOOM_DAY_W: Record<TimelineZoom, number> = {
   week: 48,
   month: 34,
@@ -30,10 +30,12 @@ export function TimelineChart({
   items,
   showZoom = true,
   showCritical = true,
+  showDependencies = true,
 }: {
   items: Task[];
   showZoom?: boolean;
   showCritical?: boolean;
+  showDependencies?: boolean;
 }) {
   const openTask = useStore((s) => s.openTask);
   const zoom = useStore((s) => s.timelineZoom);
@@ -305,6 +307,7 @@ export function TimelineChart({
                     <button
                       key={task.id}
                       onClick={() => openTask(task.id)}
+                      aria-label={task.title}
                       className={clsx(
                         "absolute flex cursor-pointer items-center overflow-hidden rounded-lg text-ios-footnote text-white shadow-sm ring-2 ring-transparent",
                         done ? "bg-green-500" : "bg-brand-500",
@@ -322,56 +325,61 @@ export function TimelineChart({
                         className="absolute inset-y-0 left-0 bg-black/20"
                         style={{ width: `${progress}%` }}
                       />
-                      <span className="relative z-10 truncate px-2">
-                        {task.title}
-                      </span>
+                      {pos.w >= 96 && (
+                        <span className="relative z-10 truncate px-2">
+                          {task.title}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
 
-                <svg
-                  className="pointer-events-none absolute left-0 top-0"
-                  width={totalW}
-                  height={items.length * ROW_H}
-                >
-                  {items.flatMap((task) =>
-                    task.dependsOn.map((depId) => {
-                      const from = positions.get(depId);
-                      const to = positions.get(task.id);
-                      if (!from || !to) return null;
-                      const x1 = from.x + from.w;
-                      const y1 = from.row * ROW_H + ROW_H / 2;
-                      const x2 = to.x;
-                      const y2 = to.row * ROW_H + ROW_H / 2;
-                      const stub = 10;
-                      let d: string;
-                      if (x2 - x1 >= stub * 2) {
-                        const midX = x1 + (x2 - x1) / 2;
-                        d = `M ${x1} ${y1} H ${midX} V ${y2} H ${x2 - 5}`;
-                      } else {
-                        const yEdge =
-                          to.row * ROW_H + (y2 > y1 ? 0 : ROW_H);
-                        d = `M ${x1} ${y1} H ${x1 + stub} V ${yEdge} H ${
-                          x2 - stub
-                        } V ${y2} H ${x2 - 5}`;
-                      }
-                      return (
-                        <g key={`${depId}-${task.id}`}>
-                          <path
-                            d={d}
-                            fill="none"
-                            stroke="#94a3b8"
-                            strokeWidth={1.5}
-                          />
-                          <path
-                            d={`M ${x2} ${y2} l -6 -3.5 v 7 z`}
-                            fill="#94a3b8"
-                          />
-                        </g>
-                      );
-                    })
-                  )}
-                </svg>
+                {showDependencies && (
+                  <svg
+                    aria-hidden="true"
+                    className="pointer-events-none absolute left-0 top-0"
+                    width={totalW}
+                    height={items.length * ROW_H}
+                  >
+                    {items.flatMap((task) =>
+                      task.dependsOn.map((depId) => {
+                        const from = positions.get(depId);
+                        const to = positions.get(task.id);
+                        if (!from || !to) return null;
+                        const x1 = from.x + from.w;
+                        const y1 = from.row * ROW_H + ROW_H / 2;
+                        const x2 = to.x;
+                        const y2 = to.row * ROW_H + ROW_H / 2;
+                        const stub = 10;
+                        let d: string;
+                        if (x2 - x1 >= stub * 2) {
+                          const midX = x1 + (x2 - x1) / 2;
+                          d = `M ${x1} ${y1} H ${midX} V ${y2} H ${x2 - 5}`;
+                        } else {
+                          const yEdge =
+                            to.row * ROW_H + (y2 > y1 ? 0 : ROW_H);
+                          d = `M ${x1} ${y1} H ${x1 + stub} V ${yEdge} H ${
+                            x2 - stub
+                          } V ${y2} H ${x2 - 5}`;
+                        }
+                        return (
+                          <g key={`${depId}-${task.id}`}>
+                            <path
+                              d={d}
+                              fill="none"
+                              stroke="#94a3b8"
+                              strokeWidth={1.5}
+                            />
+                            <path
+                              d={`M ${x2} ${y2} l -6 -3.5 v 7 z`}
+                              fill="#94a3b8"
+                            />
+                          </g>
+                        );
+                      })
+                    )}
+                  </svg>
+                )}
               </div>
             </div>
           </div>

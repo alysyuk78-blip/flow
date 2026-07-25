@@ -353,6 +353,7 @@ export function Sidebar() {
         <div className="flex min-h-11 items-center gap-2 rounded-lg border border-gray-200 bg-white px-2.5 focus-within:border-brand-400 dark:border-gray-700 dark:bg-gray-800">
           <Search className="h-3.5 w-3.5 shrink-0 text-gray-400" />
           <input
+            aria-label="Пошук задач"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={(e) => {
