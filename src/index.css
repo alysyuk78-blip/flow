@@ -151,6 +151,11 @@ body {
     padding-right: max(var(--page-gutter), env(safe-area-inset-right, 0px));
   }
 
+  /* У проєктах задачі починаються відразу після навігації, а не по центру екрана. */
+  .project-list-container {
+    @apply ml-0 mr-auto;
+  }
+
   .page-container-lg {
     @apply mx-auto w-full max-w-5xl py-5 sm:py-8;
     padding-left: max(var(--page-gutter), env(safe-area-inset-left, 0px));

@@ -33,7 +33,7 @@ export function ListView({ projectId }: { projectId: string }) {
   }
 
   return (
-    <div className="page-container">
+    <div className="page-container project-list-container">
       <BulkActionBar />
       <div className="mb-4 flex min-w-0 items-center gap-2">
         <div className="min-w-0 flex-1">
