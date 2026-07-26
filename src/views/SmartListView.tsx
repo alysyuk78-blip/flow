@@ -15,6 +15,7 @@ import {
   Hourglass,
   UsersRound,
   AlertTriangle,
+  FolderKanban,
 } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SmartList, Task, MY_DAY_LIMIT } from "../types";
@@ -42,6 +43,11 @@ const META: Record<
   SmartList,
   { title: string; icon: React.ReactNode; hint: string }
 > = {
+  projects: {
+    title: "Проєкти",
+    icon: <FolderKanban className="h-6 w-6 text-brand-500" />,
+    hint: "Огляд активних проєктів.",
+  },
   leads: {
     title: "Ліди",
     icon: <UsersRound className="h-6 w-6 text-brand-500" />,
