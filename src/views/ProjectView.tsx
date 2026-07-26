@@ -148,7 +148,14 @@ export function ProjectView({ projectId }: { projectId: string }) {
         </div>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-hidden">
+      <div
+        className={clsx(
+          "min-h-0 flex-1",
+          view === "board" || view === "timeline"
+            ? "overflow-hidden"
+            : "overflow-y-auto overscroll-contain"
+        )}
+      >
         {view === "list" && <ListView projectId={projectId} />}
         {view === "board" && <BoardView projectId={projectId} />}
         {view === "timeline" && <TimelineView projectId={projectId} />}
