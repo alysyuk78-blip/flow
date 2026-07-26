@@ -29,7 +29,6 @@ import {
   LayoutGrid,
   Hourglass,
   MapPin,
-  Sparkles,
   UsersRound,
   AlertTriangle,
 } from "lucide-react";
@@ -479,7 +478,7 @@ export function Sidebar() {
               </button>
               <button
                 onClick={() => setShowTemplates((v) => !v)}
-                title="З шаблону"
+                title="Шаблони та готові плани"
                 className="rounded p-0.5 text-gray-400 hover:text-brand-500"
               >
                 <LayoutTemplate className="h-4 w-4" />
@@ -520,6 +519,26 @@ export function Sidebar() {
 
         {showTemplates && (
           <div className="mx-2 mb-2 space-y-1 rounded-lg border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800">
+            <div className="px-2 pb-1 pt-0.5 ios-section-label">
+              Готові плани
+            </div>
+            <button
+              onClick={() => {
+                handleAvalonPlanImport();
+                setShowTemplates(false);
+              }}
+              className="block w-full rounded-lg px-2 py-1.5 text-left text-ios-footnote hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <span className="font-medium text-gray-800 dark:text-gray-100">
+                AVALON: отримання лідів
+              </span>
+              <span className="block text-gray-400">
+                30-денний план просування кошиків кондиціонерів
+              </span>
+            </button>
+            <div className="px-2 pb-1 pt-3 ios-section-label">
+              Шаблони проєктів
+            </div>
             {PROJECT_TEMPLATES.map((tpl) => (
               <button
                 key={tpl.id}
@@ -667,46 +686,6 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-gray-200 px-3 py-2.5 dark:border-gray-800">
-        <div className="group relative mb-1 flex items-center rounded-lg hover:bg-brand-50 focus-within:bg-brand-50 dark:hover:bg-brand-500/10 dark:focus-within:bg-brand-500/10">
-          <button
-            type="button"
-            onClick={handleAvalonPlanImport}
-            title={
-              avalonPlanProject
-                ? "Відкрити 30-денний робочий план просування кошиків кондиціонерів"
-                : "Додати готовий 30-денний план із задачами, чек-листами та текстами"
-            }
-            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-lg px-2 text-left text-ios-footnote font-medium text-brand-600 dark:text-brand-300"
-          >
-            <Sparkles className="h-4 w-4 shrink-0" />
-            <span className="min-w-0 flex-1">
-              <span className="block">
-                {avalonPlanProject
-                  ? "Відкрити план AVALON"
-                  : "Додати план AVALON"}
-              </span>
-              <span className="block truncate text-ios-caption font-normal text-gray-400">
-                30 днів просування кошиків
-              </span>
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setHelpOpen(true)}
-            aria-label="Що таке План AVALON"
-            title="Що таке План AVALON"
-            className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-brand-600 dark:hover:bg-gray-800"
-          >
-            <HelpCircle className="h-4 w-4" />
-          </button>
-          <div
-            role="tooltip"
-            className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-60 rounded-lg bg-gray-900 px-3 py-2 text-ios-caption font-normal leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-gray-700"
-          >
-            Готовий 30-денний план із 31 задачею, чек-листами та
-            текстами для просування кошиків. Інші дані не замінюються.
-          </div>
-        </div>
         <div className="flex flex-wrap items-center gap-1">
           <button
             onClick={exportBackup}
