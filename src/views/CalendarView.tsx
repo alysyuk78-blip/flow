@@ -14,7 +14,7 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { Task } from "../types";
 import { DayAddModal } from "../components/DayAddModal";
-import { todayISO } from "../lib/dates";
+import { isOverdue, todayISO } from "../lib/dates";
 
 export function CalendarView({ projectId }: { projectId?: string }) {
   const tasks = useStore((s) => s.tasks);
@@ -97,6 +97,9 @@ export function CalendarView({ projectId }: { projectId?: string }) {
             );
           }
           const dayTasks = tasksOn(day);
+          const hasOverdue = dayTasks.some(
+            (task) => task.status !== "done" && isOverdue(task.dueDate)
+          );
           const today = isToday(day);
           const iso = format(day, "yyyy-MM-dd");
           return (
@@ -118,6 +121,8 @@ export function CalendarView({ projectId }: { projectId?: string }) {
                     "inline-flex h-6 w-6 items-center justify-center rounded-full text-ios-footnote",
                     today
                       ? "bg-brand-500 font-bold text-white"
+                      : hasOverdue
+                        ? "bg-red-100 font-semibold text-red-600 dark:bg-red-500/15 dark:text-red-300"
                       : "text-gray-600 dark:text-gray-400"
                   )}
                 >
@@ -125,7 +130,12 @@ export function CalendarView({ projectId }: { projectId?: string }) {
                 </span>
                 <span className="hidden items-center gap-1 sm:flex">
                   {dayTasks.length > 0 && (
-                    <span className="text-ios-caption text-brand-500">
+                    <span
+                      className={clsx(
+                        "text-ios-caption",
+                        hasOverdue ? "text-red-500" : "text-brand-500"
+                      )}
+                    >
                       {dayTasks.length}
                     </span>
                   )}
@@ -133,7 +143,10 @@ export function CalendarView({ projectId }: { projectId?: string }) {
               </button>
               {dayTasks.length > 0 && (
                 <span
-                  className="pointer-events-none absolute bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-brand-500 sm:hidden"
+                  className={clsx(
+                    "pointer-events-none absolute bottom-1 left-1/2 h-1.5 w-1.5 -translate-x-1/2 rounded-full sm:hidden",
+                    hasOverdue ? "bg-red-500" : "bg-brand-500"
+                  )}
                   aria-hidden="true"
                 />
               )}
@@ -154,6 +167,8 @@ export function CalendarView({ projectId }: { projectId?: string }) {
                       "block w-full truncate rounded px-1 py-0.5 text-left text-ios-caption",
                       t.kind === "milestone"
                         ? "bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-300"
+                        : t.status !== "done" && isOverdue(t.dueDate)
+                          ? "bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-300"
                         : "bg-brand-100 text-brand-800 dark:bg-brand-500/20 dark:text-brand-200"
                     )}
                   >
@@ -194,12 +209,21 @@ export function CalendarView({ projectId }: { projectId?: string }) {
               <button
                 key={task.id}
                 onClick={() => openTask(task.id)}
-                className="touch-target flex w-full items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-left text-ios-body hover:border-brand-300 hover:bg-brand-50 dark:border-gray-700 dark:hover:bg-brand-500/10"
+                className={clsx(
+                  "touch-target flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-left text-ios-body hover:border-brand-300 hover:bg-brand-50 dark:hover:bg-brand-500/10",
+                  task.status !== "done" && isOverdue(task.dueDate)
+                    ? "border-red-200 bg-red-50/50 dark:border-red-500/30 dark:bg-red-500/5"
+                    : "border-gray-200 dark:border-gray-700"
+                )}
               >
                 <span
                   className={clsx(
                     "h-2.5 w-2.5 shrink-0 rounded-full",
-                    task.kind === "milestone" ? "bg-amber-500" : "bg-brand-500"
+                    task.status !== "done" && isOverdue(task.dueDate)
+                      ? "bg-red-500"
+                      : task.kind === "milestone"
+                        ? "bg-amber-500"
+                        : "bg-brand-500"
                   )}
                 />
                 <span className="min-w-0 flex-1 break-words">{task.title}</span>

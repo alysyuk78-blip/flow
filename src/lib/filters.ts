@@ -91,6 +91,13 @@ export function upcomingTasks(tasks: Task[]): Task[] {
     .sort((a, b) => (a.dueDate! < b.dueDate! ? -1 : 1));
 }
 
+/** «Прострочені»: активні задачі з дедлайном у минулому. */
+export function overdueTasks(tasks: Task[]): Task[] {
+  return tasks
+    .filter((t) => isActiveTask(t) && isOverdue(t.dueDate))
+    .sort(byDueThenPriority);
+}
+
 /** Задачі конкретного проєкту. */
 export function projectTasks(tasks: Task[], projectId: string): Task[] {
   return tasks.filter((t) => t.projectId === projectId);

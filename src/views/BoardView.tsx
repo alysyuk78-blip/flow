@@ -11,7 +11,7 @@ import {
   DragEndEvent,
 } from "@dnd-kit/core";
 import clsx from "clsx";
-import { CalendarDays } from "lucide-react";
+import { AlertTriangle, CalendarDays } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { projectTasks, byOrder, computedProgress } from "../lib/filters";
 import { STATUS_LABELS, STATUS_ORDER, Status, Task } from "../types";
@@ -148,11 +148,13 @@ function Card({ task, overlay }: { task: Task; overlay?: boolean }) {
     .map((id) => tags.find((t) => t.id === id))
     .filter(Boolean);
   const progress = computedProgress(task);
+  const overdue = task.status !== "done" && isOverdue(task.dueDate);
 
   return (
     <div
       className={clsx(
         "cursor-grab rounded-lg border border-gray-200 bg-white p-3 shadow-sm active:cursor-grabbing dark:border-gray-700 dark:bg-gray-900",
+        overdue && "border-red-200 bg-red-50/50 dark:border-red-500/30 dark:bg-red-500/5",
         overlay && "rotate-3 shadow-lg"
       )}
     >
@@ -162,15 +164,19 @@ function Card({ task, overlay }: { task: Task; overlay?: boolean }) {
         </span>
         <PriorityFlag priority={task.priority} />
       </div>
+      {overdue && (
+        <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-red-100 px-1.5 py-0.5 text-ios-caption font-medium text-red-600 dark:bg-red-500/15 dark:text-red-300">
+          <AlertTriangle className="h-3 w-3" />
+          Прострочено
+        </span>
+      )}
       {(task.dueDate || taskTags.length > 0) && (
         <div className="mt-2 flex flex-wrap items-center gap-2 text-ios-footnote text-gray-500">
           {task.dueDate && (
             <span
               className={clsx(
                 "inline-flex items-center gap-1",
-                isOverdue(task.dueDate) &&
-                  task.status !== "done" &&
-                  "text-red-500"
+                overdue && "text-red-500"
               )}
             >
               <CalendarDays className="h-3 w-3" />

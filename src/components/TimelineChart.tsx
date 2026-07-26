@@ -16,7 +16,7 @@ import { Link2, Type } from "lucide-react";
 import { Task, TimelineZoom, TIMELINE_ZOOM_LABELS } from "../types";
 import { computedProgress } from "../lib/filters";
 import { criticalPathIds } from "../lib/criticalPath";
-import { todayISO } from "../lib/dates";
+import { isOverdue, todayISO } from "../lib/dates";
 import { useStore } from "../store/useStore";
 
 const ROW_H = 44;
@@ -165,6 +165,7 @@ export function TimelineChart({
                   }`
                 : "Без дати";
               const isCritical = critical.has(task.id);
+              const isOverdueTask = task.status !== "done" && isOverdue(task.dueDate);
 
               return (
                 <button
@@ -174,6 +175,8 @@ export function TimelineChart({
                     "touch-target w-full rounded-lg border bg-white px-3 py-3 text-left dark:bg-gray-900",
                     isCritical
                       ? "border-amber-300 dark:border-amber-500/50"
+                      : isOverdueTask
+                        ? "border-red-300 dark:border-red-500/50"
                       : "border-gray-200 dark:border-gray-700"
                   )}
                 >
@@ -183,6 +186,8 @@ export function TimelineChart({
                         "mt-1.5 h-2.5 w-2.5 shrink-0",
                         task.kind === "milestone"
                           ? "rotate-45 bg-amber-500"
+                          : isOverdueTask
+                            ? "rounded-full bg-red-500"
                           : "rounded-full bg-brand-500"
                       )}
                     />
@@ -384,6 +389,7 @@ export function TimelineChart({
                   <div
                     key={i}
                     style={{ width: DAY_W }}
+                    title={format(d, "d MMMM yyyy", { locale: uk })}
                     className={clsx(
                       "flex flex-col items-center justify-center border-b border-l border-gray-200 text-ios-caption dark:border-gray-700",
                       isWeekend(d) && "bg-gray-50 dark:bg-gray-800/40",
@@ -403,7 +409,7 @@ export function TimelineChart({
                           : "text-gray-600 dark:text-gray-300"
                       )}
                     >
-                      {format(d, zoom === "quarter" ? "d MMM" : "d", {
+                      {format(d, "d", {
                         locale: uk,
                       })}
                     </span>
@@ -439,6 +445,7 @@ export function TimelineChart({
                   const done = task.status === "done";
                   const isCritical = critical.has(task.id);
                   const isMilestone = task.kind === "milestone";
+                  const isOverdueTask = !done && isOverdue(task.dueDate);
 
                   if (isMilestone) {
                     const cx = pos.x + pos.w / 2;
@@ -457,6 +464,8 @@ export function TimelineChart({
                             "h-4 w-4 rotate-45 border-2",
                             done
                               ? "border-green-500 bg-green-500"
+                              : isOverdueTask
+                                ? "border-red-500 bg-red-500"
                               : "border-amber-500 bg-amber-400"
                           )}
                         />
@@ -472,7 +481,11 @@ export function TimelineChart({
                       className={clsx(
                         "absolute flex cursor-pointer items-center rounded-lg text-ios-footnote text-white shadow-sm ring-2 ring-transparent",
                         namesAfterBar ? "overflow-visible" : "overflow-hidden",
-                        done ? "bg-green-500" : "bg-brand-500",
+                        done
+                          ? "bg-green-500"
+                          : isOverdueTask
+                            ? "bg-red-500"
+                            : "bg-brand-500",
                         isCritical && !done && "ring-amber-400",
                         linkSourceId === task.id && "ring-amber-400"
                       )}

@@ -30,6 +30,7 @@ import {
   MapPin,
   Sparkles,
   UsersRound,
+  AlertTriangle,
 } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SmartList } from "../types";
@@ -37,6 +38,7 @@ import {
   inboxTasks,
   todayTasks,
   upcomingTasks,
+  overdueTasks,
   logbookTasks,
   somedayTasks,
   myDayTasks,
@@ -224,6 +226,7 @@ export function Sidebar() {
     inbox: inboxTasks(tasks).length,
     myDay: myDayTasks(tasks).length,
     today: todayTasks(tasks).length,
+    overdue: overdueTasks(tasks).length,
     upcoming: upcomingTasks(tasks).length,
     all: tasks.filter((t) => t.status !== "done").length,
     someday: somedayTasks(tasks).length,
@@ -245,6 +248,11 @@ export function Sidebar() {
     { id: "inbox", label: "Вхідні", icon: <Inbox className="h-4 w-4" /> },
     { id: "myDay", label: "Мій день", icon: <Sun className="h-4 w-4" /> },
     { id: "today", label: "Сьогодні", icon: <Star className="h-4 w-4" /> },
+    {
+      id: "overdue",
+      label: "Прострочені",
+      icon: <AlertTriangle className="h-4 w-4 text-red-500" />,
+    },
     {
       id: "upcoming",
       label: "Найближчі",
@@ -400,7 +408,8 @@ export function Sidebar() {
                 <span
                   className={clsx(
                     "ios-list-count",
-                    active && "text-white/80"
+                    active && "text-white/80",
+                    item.id === "overdue" && !active && "text-red-500"
                   )}
                 >
                   {counts[item.id]}

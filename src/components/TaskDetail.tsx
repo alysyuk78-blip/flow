@@ -31,7 +31,7 @@ import { RichEditor } from "./RichEditor";
 import { TagPicker } from "./TagPicker";
 import { computedProgress } from "../lib/filters";
 import { cycleMembers } from "../lib/dependencies";
-import { todayISO } from "../lib/dates";
+import { isOverdue, todayISO } from "../lib/dates";
 
 export function TaskDetail({ isModal = false }: { isModal?: boolean }) {
   const selectedTaskId = useStore((s) => s.selectedTaskId);
@@ -95,6 +95,7 @@ export function TaskDetail({ isModal = false }: { isModal?: boolean }) {
   if (!selectedTaskId || !task) return null;
 
   const progress = computedProgress(task);
+  const overdue = task.status !== "done" && isOverdue(task.dueDate);
   const depOptions = tasks.filter(
     (t) =>
       t.id !== task.id &&
@@ -181,6 +182,15 @@ export function TaskDetail({ isModal = false }: { isModal?: boolean }) {
             className="min-w-0 flex-1 resize-none break-words bg-transparent text-ios-title3 font-semibold text-gray-800 outline-none dark:text-gray-100"
           />
         </div>
+        {overdue && (
+          <div
+            role="status"
+            className="-mt-3 flex items-center gap-1.5 text-ios-footnote font-medium text-red-600 dark:text-red-300"
+          >
+            <AlertTriangle className="h-3.5 w-3.5" />
+            Прострочено: дедлайн уже минув
+          </div>
+        )}
 
         {/* Властивості */}
         <div className="task-detail-fields space-y-3">

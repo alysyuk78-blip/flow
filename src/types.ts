@@ -142,6 +142,7 @@ export type SmartList =
   | "inbox"
   | "myDay"
   | "today"
+  | "overdue"
   | "upcoming"
   | "all"
   | "someday"

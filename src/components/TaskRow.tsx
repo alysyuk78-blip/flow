@@ -11,6 +11,7 @@ import {
   Hourglass,
   Flame,
   Clock,
+  AlertTriangle,
 } from "lucide-react";
 import { Tag, Task } from "../types";
 import { useStore } from "../store/useStore";
@@ -38,6 +39,7 @@ export function TaskRow({
   const projects = useStore((s) => s.projects);
 
   const done = task.status === "done";
+  const overdue = !done && isOverdue(task.dueDate);
   const project = projects.find((p) => p.id === task.projectId);
   const taskTags = task.tagIds
     .map((id) => tags.find((t) => t.id === id))
@@ -61,6 +63,8 @@ export function TaskRow({
         "group flex cursor-pointer items-start gap-2 rounded-lg border px-2.5 py-2.5 transition-all duration-200 ease-smooth xs:gap-3 xs:px-3 xs:py-2",
         selectedTaskId === task.id || bulkSelected
           ? "border-brand-300 bg-brand-50 dark:border-brand-500/40 dark:bg-brand-500/10"
+          : overdue
+            ? "border-red-200 bg-red-50/50 dark:border-red-500/30 dark:bg-red-500/5"
           : "border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/60"
       )}
     >
@@ -115,6 +119,12 @@ export function TaskRow({
 
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
           <PriorityFlag priority={task.priority} />
+          {overdue && (
+            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-red-100 px-1.5 py-0.5 text-ios-caption font-medium text-red-600 dark:bg-red-500/15 dark:text-red-300">
+              <AlertTriangle className="h-3 w-3" />
+              Прострочено
+            </span>
+          )}
           {task.kind === "milestone" && (
             <Diamond className="h-3 w-3 shrink-0 text-amber-500" strokeWidth={1.5} />
           )}
@@ -176,7 +186,7 @@ export function TaskRow({
             <span
               className={clsx(
                 "inline-flex items-center gap-1",
-                isOverdue(task.dueDate) && !done && "text-red-500"
+                overdue && "text-red-500"
               )}
             >
               <CalendarDays className="h-3 w-3" />

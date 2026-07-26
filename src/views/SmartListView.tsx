@@ -14,6 +14,7 @@ import {
   LayoutGrid,
   Hourglass,
   UsersRound,
+  AlertTriangle,
 } from "lucide-react";
 import { useStore } from "../store/useStore";
 import { SmartList, Task, MY_DAY_LIMIT } from "../types";
@@ -21,6 +22,7 @@ import {
   inboxTasks,
   todayTasks,
   upcomingTasks,
+  overdueTasks,
   somedayTasks,
   myDayTasks,
   waitingTasks,
@@ -59,6 +61,11 @@ const META: Record<
     title: "Сьогодні",
     icon: <Star className="h-6 w-6 text-amber-500" />,
     hint: "Те, що заплановано або прострочено на сьогодні.",
+  },
+  overdue: {
+    title: "Прострочені",
+    icon: <AlertTriangle className="h-6 w-6 text-red-500" />,
+    hint: "Активні задачі, дедлайн яких уже минув.",
   },
   upcoming: {
     title: "Найближчі",
@@ -132,6 +139,9 @@ export function SmartListView({ list }: { list: SmartList }) {
     case "today":
       items = todayTasks(tasks).sort(byDueThenPriority);
       break;
+    case "overdue":
+      items = overdueTasks(tasks);
+      break;
     case "upcoming":
       items = upcomingTasks(tasks);
       break;
@@ -157,7 +167,7 @@ export function SmartListView({ list }: { list: SmartList }) {
       ? groupByDue(items)
       : [{ label: "", items }];
 
-  const showQuickAdd = !["upcoming", "waiting"].includes(list);
+  const showQuickAdd = !["upcoming", "overdue", "waiting"].includes(list);
 
   return (
     <div className="page-container">
