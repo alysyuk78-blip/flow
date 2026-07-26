@@ -244,7 +244,7 @@ export function Sidebar() {
   }[] = [
     {
       id: "projects",
-      label: "Проєкти",
+      label: "Огляд проєктів",
       icon: <FolderKanban className="h-4 w-4" />,
     },
     {
