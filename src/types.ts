@@ -139,6 +139,7 @@ export interface Lead {
 export type ProjectViewKind = "list" | "board" | "timeline" | "notes" | "calendar";
 
 export type SmartList =
+  | "projects"
   | "inbox"
   | "myDay"
   | "today"

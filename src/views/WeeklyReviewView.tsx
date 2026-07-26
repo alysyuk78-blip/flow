@@ -46,6 +46,7 @@ const STEPS = [
     id: "projects",
     label: "Оглянути проєкти без руху",
     hint: "Проєкти без активності 2 тижні — архів або план",
+    nav: { kind: "smart" as const, list: "projects" as const },
     countKey: "staleProjectCount" as const,
   },
   {

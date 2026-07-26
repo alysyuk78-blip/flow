@@ -16,6 +16,7 @@ import {
   Upload,
   HelpCircle,
   Folder,
+  FolderKanban,
   Archive,
   GanttChartSquare,
   CalendarDays,
@@ -223,6 +224,7 @@ export function Sidebar() {
   const contextTags = tags.filter((t) => t.kind === "context");
 
   const counts: Partial<Record<SmartList, number>> = {
+    projects: activeProjects(projects).length,
     inbox: inboxTasks(tasks).length,
     myDay: myDayTasks(tasks).length,
     today: todayTasks(tasks).length,
@@ -240,6 +242,11 @@ export function Sidebar() {
     label: string;
     icon: React.ReactNode;
   }[] = [
+    {
+      id: "projects",
+      label: "Проєкти",
+      icon: <FolderKanban className="h-4 w-4" />,
+    },
     {
       id: "leads",
       label: "Ліди",
@@ -460,7 +467,7 @@ export function Sidebar() {
         <div className="px-2 pb-1 pt-5">
           <div className="flex items-center justify-between">
             <span className="ios-section-label">
-              Проєкти
+              Мої проєкти
             </span>
             <div className="flex items-center gap-0.5">
               <button

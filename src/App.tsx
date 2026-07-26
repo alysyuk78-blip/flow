@@ -64,6 +64,11 @@ const LeadsView = lazy(() =>
     default: module.LeadsView,
   }))
 );
+const ProjectsView = lazy(() =>
+  import("./views/ProjectsView").then((module) => ({
+    default: module.ProjectsView,
+  }))
+);
 
 function ViewFallback() {
   return (
@@ -149,6 +154,8 @@ export default function App() {
     if (selection.kind === "project")
       return <ProjectView projectId={selection.projectId} />;
     switch (selection.list) {
+      case "projects":
+        return <ProjectsView />;
       case "logbook":
         return <LogbookView />;
       case "timeline":
