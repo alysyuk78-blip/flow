@@ -290,6 +290,143 @@ interface State {
   importIcalTasks: (tasks: Partial<Task>[]) => void;
 }
 
+type AvalonPlanCollections = Pick<
+  State,
+  "projects" | "sections" | "tasks" | "tags" | "areas"
+>;
+
+function restoreAvalonPlan(
+  state: AvalonPlanCollections
+): AvalonPlanCollections {
+  const now = new Date().toISOString();
+  const area =
+    state.areas.find(
+      (item) =>
+        item.name.toLocaleLowerCase("uk") ===
+        AVALON_PLAN_TEMPLATE.area.toLocaleLowerCase("uk")
+    ) ?? {
+      id: nanoid(),
+      name: AVALON_PLAN_TEMPLATE.area,
+      color: AVALON_PLAN_TEMPLATE.color,
+      order: state.areas.length,
+    };
+  const areas = state.areas.some((item) => item.id === area.id)
+    ? state.areas
+    : [...state.areas, area];
+
+  const tagColors: Record<string, string> = {
+    AI: "#0ea5e9",
+    "Власноруч": "#f59e0b",
+    "Робота": "#16a34a",
+    "Важливе": "#ef4444",
+    "забудовники": "#8b5cf6",
+  };
+  const tags = [...state.tags];
+  const tagIdsByName = new Map(
+    tags.map((tag) => [tag.name.toLocaleLowerCase("uk"), tag.id])
+  );
+  for (const item of AVALON_PLAN_TEMPLATE.items) {
+    if (item.kind !== "task") continue;
+    for (const name of item.tags) {
+      const key = name.toLocaleLowerCase("uk");
+      if (tagIdsByName.has(key)) continue;
+      const id = nanoid();
+      tags.push({
+        id,
+        name,
+        color: tagColors[name] ?? "#64748b",
+        kind: "label",
+      });
+      tagIdsByName.set(key, id);
+    }
+  }
+
+  const projectId = nanoid();
+  const project: Project = {
+    id: projectId,
+    name: AVALON_PLAN_TEMPLATE.name,
+    color: AVALON_PLAN_TEMPLATE.color,
+    notes: plainTextToHtml(AVALON_PLAN_TEMPLATE.notes),
+    archived: false,
+    order: state.projects.length,
+    createdAt: now,
+    areaId: area.id,
+  };
+  const sections: ProjectSection[] = [];
+  const tasks: Task[] = [];
+  let sectionId: string | null = null;
+
+  for (const item of AVALON_PLAN_TEMPLATE.items) {
+    if (item.kind === "section") {
+      sectionId = nanoid();
+      sections.push({
+        id: sectionId,
+        projectId,
+        title: item.title,
+        order: sections.length,
+      });
+      continue;
+    }
+
+    const important = item.tags.includes("Важливе");
+    tasks.push({
+      id: nanoid(),
+      kind: "task",
+      title: item.title,
+      notes: plainTextToHtml(item.notes),
+      projectId,
+      sectionId,
+      status: "todo",
+      priority: important ? "high" : "none",
+      tagIds: item.tags
+        .map((name) => tagIdsByName.get(name.toLocaleLowerCase("uk")))
+        .filter((id): id is string => Boolean(id)),
+      startDate: item.startDate,
+      dueDate: item.dueDate,
+      deferUntil: null,
+      isMyDay: false,
+      timeEstimateMinutes: null,
+      important,
+      urgent: false,
+      waitingFor: null,
+      streakCount: 0,
+      lastStreakDate: null,
+      recurrence: "none",
+      reminder: false,
+      reminderTime: null,
+      reminderDaysBefore: 0,
+      subtasks: item.checklist.map((title) => ({
+        id: nanoid(),
+        title,
+        done: false,
+      })),
+      dependsOn: [],
+      progress: 0,
+      order: tasks.length,
+      createdAt: now,
+      completedAt: null,
+    });
+  }
+
+  return {
+    projects: [...state.projects, project],
+    sections: [...state.sections, ...sections],
+    tasks: [...state.tasks, ...tasks],
+    tags,
+    areas,
+  };
+}
+
+function needsAvalonPlanRestore(state: AvalonPlanCollections): boolean {
+  const projectNames = new Set(state.projects.map((project) => project.name));
+  return (
+    !projectNames.has(AVALON_PLAN_TEMPLATE.name) &&
+    state.projects.length === 2 &&
+    projectNames.has("Запуск сайту") &&
+    projectNames.has("Дім і побут")
+  );
+}
+
 const seed = makeSeed();
 
 function nextOrder(tasks: Task[], projectId: string | null): number {
@@ -1253,7 +1390,7 @@ export const useStore = create<State>()(
     }),
     {
       name: PERSIST_KEY,
-      version: 5,
+      version: 6,
       migrate: (persisted: unknown) => {
         const s = persisted as State;
         if (!s) return persisted;
@@ -1280,7 +1417,7 @@ export const useStore = create<State>()(
                 kind: "context" as TagKind,
               })),
             ];
-        return {
+        const normalized = {
           ...s,
           areas: s.areas ?? [],
           leads: (s.leads ?? []).map((lead) =>
@@ -1304,6 +1441,17 @@ export const useStore = create<State>()(
             normalizeTask(t as Task & Record<string, unknown>)
           ),
         };
+        const collections: AvalonPlanCollections = {
+          projects: normalized.projects,
+          sections: normalized.sections,
+          tasks: normalized.tasks,
+          tags: normalized.tags,
+          areas: normalized.areas,
+        };
+
+        return needsAvalonPlanRestore(collections)
+          ? { ...normalized, ...restoreAvalonPlan(collections) }
+          : normalized;
       },
       partialize: (s) => ({
         projects: s.projects,
