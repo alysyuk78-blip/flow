@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   eachDayOfInterval,
   parseISO,
@@ -12,6 +12,7 @@ import {
 } from "date-fns";
 import { uk } from "date-fns/locale";
 import clsx from "clsx";
+import { Link2, Type } from "lucide-react";
 import { Task, TimelineZoom, TIMELINE_ZOOM_LABELS } from "../types";
 import { computedProgress } from "../lib/filters";
 import { criticalPathIds } from "../lib/criticalPath";
@@ -19,7 +20,9 @@ import { todayISO } from "../lib/dates";
 import { useStore } from "../store/useStore";
 
 const ROW_H = 44;
-const LABEL_W = 280;
+const MIN_LABEL_W = 220;
+const MAX_LABEL_W = 520;
+const TRAILING_LABEL_W = 280;
 const ZOOM_DAY_W: Record<TimelineZoom, number> = {
   week: 48,
   month: 34,
@@ -40,6 +43,20 @@ export function TimelineChart({
   const openTask = useStore((s) => s.openTask);
   const zoom = useStore((s) => s.timelineZoom);
   const setTimelineZoom = useStore((s) => s.setTimelineZoom);
+  const labelWidth = useStore((s) => s.timelineLabelWidth);
+  const setLabelWidth = useStore((s) => s.setTimelineLabelWidth);
+  const namesAfterBar = useStore((s) => s.timelineNamesAfterBar);
+  const setNamesAfterBar = useStore((s) => s.setTimelineNamesAfterBar);
+  const dependenciesVisible = useStore(
+    (s) => s.timelineShowDependencies
+  );
+  const setDependenciesVisible = useStore(
+    (s) => s.setTimelineShowDependencies
+  );
+  const updateTask = useStore((s) => s.updateTask);
+  const [linkMode, setLinkMode] = useState(false);
+  const [linkSourceId, setLinkSourceId] = useState<string | null>(null);
+  const resizeStart = useRef({ pointerX: 0, width: labelWidth });
   const DAY_W = ZOOM_DAY_W[zoom];
 
   const critical = useMemo(
@@ -90,6 +107,36 @@ export function TimelineChart({
   });
 
   const totalW = days.length * DAY_W;
+  const chartW = totalW + (namesAfterBar ? TRAILING_LABEL_W : 0);
+
+  function activateTask(task: Task) {
+    if (!linkMode) {
+      openTask(task.id);
+      return;
+    }
+    if (!linkSourceId) {
+      setLinkSourceId(task.id);
+      return;
+    }
+    if (linkSourceId === task.id) {
+      setLinkSourceId(null);
+      return;
+    }
+    const nextDependencies = task.dependsOn.includes(linkSourceId)
+      ? task.dependsOn
+      : [...task.dependsOn, linkSourceId];
+    if (!updateTask(task.id, { dependsOn: nextDependencies })) {
+      alert("Неможливо створити зв'язок: виникне цикл.");
+      return;
+    }
+    setLinkSourceId(null);
+  }
+
+  function toggleLinkMode() {
+    setLinkMode((current) => !current);
+    setLinkSourceId(null);
+    if (!dependenciesVisible) setDependenciesVisible(true);
+  }
 
   return (
     <>
@@ -167,7 +214,7 @@ export function TimelineChart({
       <div className="hidden h-full overflow-auto md:block">
       <div className="min-w-max px-6 py-4">
         {showZoom && (
-          <div className="mb-3 flex items-center gap-2">
+          <div className="mb-3 flex flex-wrap items-center gap-2">
             <span className="text-ios-footnote text-gray-500">Масштаб:</span>
             {(Object.keys(TIMELINE_ZOOM_LABELS) as TimelineZoom[]).map((z) => (
               <button
@@ -188,6 +235,67 @@ export function TimelineChart({
                 Помаранчева смужка — критичний шлях
               </span>
             )}
+            <span className="mx-1 h-5 w-px bg-gray-200 dark:bg-gray-700" />
+            <button
+              type="button"
+              aria-pressed={namesAfterBar}
+              onClick={() => setNamesAfterBar(!namesAfterBar)}
+              title="Показувати повну назву праворуч від смуги тривалості"
+              className={clsx(
+                "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-ios-footnote transition",
+                namesAfterBar
+                  ? "bg-brand-500 text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+              )}
+            >
+              <Type className="h-3.5 w-3.5" />
+              Назви після смуги
+            </button>
+            {showDependencies && (
+              <>
+                <button
+                  type="button"
+                  aria-pressed={dependenciesVisible}
+                  onClick={() =>
+                    setDependenciesVisible(!dependenciesVisible)
+                  }
+                  title="Показати або сховати стрілки між пов'язаними задачами"
+                  className={clsx(
+                    "flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-ios-footnote transition",
+                    dependenciesVisible
+                      ? "bg-brand-500 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                  )}
+                >
+                  <Link2 className="h-3.5 w-3.5" />
+                  Зв'язки
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={linkMode}
+                  onClick={toggleLinkMode}
+                  title="Оберіть спочатку попередню задачу, потім задачу, яка від неї залежить"
+                  className={clsx(
+                    "rounded-lg px-2.5 py-1 text-ios-footnote transition",
+                    linkMode
+                      ? "bg-amber-500 text-white"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300"
+                  )}
+                >
+                  {linkMode ? "Скасувати зв'язування" : "Створити зв'язок"}
+                </button>
+              </>
+            )}
+            {linkMode && (
+              <span
+                role="status"
+                className="text-ios-footnote text-amber-700 dark:text-amber-300"
+              >
+                {linkSourceId
+                  ? "Тепер оберіть залежну задачу"
+                  : "Спочатку оберіть попередню задачу"}
+              </span>
+            )}
           </div>
         )}
 
@@ -197,7 +305,7 @@ export function TimelineChart({
           </div>
         ) : (
           <div className="flex">
-            <div style={{ width: LABEL_W }} className="shrink-0">
+            <div style={{ width: labelWidth }} className="shrink-0">
               <div
                 style={{ height: 40 }}
                 className="border-b border-gray-200 dark:border-gray-700"
@@ -206,8 +314,12 @@ export function TimelineChart({
                 <button
                   key={task.id}
                   style={{ height: ROW_H }}
-                  onClick={() => openTask(task.id)}
-                  className="flex w-full items-center gap-1 truncate border-b border-gray-100 pr-3 text-left text-ios-body text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200"
+                  onClick={() => activateTask(task)}
+                  className={clsx(
+                    "flex w-full items-center gap-1 truncate border-b border-gray-100 pr-3 text-left text-ios-body text-gray-700 hover:text-brand-600 dark:border-gray-800 dark:text-gray-200",
+                    linkSourceId === task.id &&
+                      "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
+                  )}
                 >
                   {task.kind === "milestone" && (
                     <span className="text-amber-500">◆</span>
@@ -217,7 +329,56 @@ export function TimelineChart({
               ))}
             </div>
 
-            <div className="relative" style={{ width: totalW }}>
+            <div
+              role="separator"
+              aria-label="Ширина колонки назв"
+              aria-orientation="vertical"
+              aria-valuemin={MIN_LABEL_W}
+              aria-valuemax={MAX_LABEL_W}
+              aria-valuenow={labelWidth}
+              tabIndex={0}
+              title="Перетягніть, щоб змінити ширину колонки назв"
+              onPointerDown={(event) => {
+                resizeStart.current = {
+                  pointerX: event.clientX,
+                  width: labelWidth,
+                };
+                event.currentTarget.setPointerCapture(event.pointerId);
+              }}
+              onPointerMove={(event) => {
+                if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  return;
+                }
+                setLabelWidth(
+                  resizeStart.current.width +
+                    event.clientX -
+                    resizeStart.current.pointerX
+                );
+              }}
+              onPointerUp={(event) => {
+                event.currentTarget.releasePointerCapture(event.pointerId);
+              }}
+              onPointerCancel={(event) => {
+                if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+                  event.currentTarget.releasePointerCapture(event.pointerId);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowLeft") {
+                  event.preventDefault();
+                  setLabelWidth(labelWidth - 20);
+                }
+                if (event.key === "ArrowRight") {
+                  event.preventDefault();
+                  setLabelWidth(labelWidth + 20);
+                }
+              }}
+              className="group relative z-20 w-2 shrink-0 touch-none cursor-col-resize outline-none"
+            >
+              <span className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gray-200 transition group-hover:w-0.5 group-hover:bg-brand-400 group-focus:w-0.5 group-focus:bg-brand-500 dark:bg-gray-700" />
+            </div>
+
+            <div className="relative" style={{ width: chartW }}>
               <div className="flex" style={{ height: 40 }}>
                 {days.map((d, i) => (
                   <div
@@ -285,7 +446,7 @@ export function TimelineChart({
                     return (
                       <button
                         key={task.id}
-                        onClick={() => openTask(task.id)}
+                        onClick={() => activateTask(task)}
                         aria-label={task.title}
                         className="absolute cursor-pointer"
                         style={{ left: cx - 8, top: cy - 8 }}
@@ -306,12 +467,14 @@ export function TimelineChart({
                   return (
                     <button
                       key={task.id}
-                      onClick={() => openTask(task.id)}
+                      onClick={() => activateTask(task)}
                       aria-label={task.title}
                       className={clsx(
-                        "absolute flex cursor-pointer items-center overflow-hidden rounded-lg text-ios-footnote text-white shadow-sm ring-2 ring-transparent",
+                        "absolute flex cursor-pointer items-center rounded-lg text-ios-footnote text-white shadow-sm ring-2 ring-transparent",
+                        namesAfterBar ? "overflow-visible" : "overflow-hidden",
                         done ? "bg-green-500" : "bg-brand-500",
-                        isCritical && !done && "ring-amber-400"
+                        isCritical && !done && "ring-amber-400",
+                        linkSourceId === task.id && "ring-amber-400"
                       )}
                       style={{
                         left: pos.x + 3,
@@ -325,20 +488,24 @@ export function TimelineChart({
                         className="absolute inset-y-0 left-0 bg-black/20"
                         style={{ width: `${progress}%` }}
                       />
-                      {pos.w >= 96 && (
+                      {namesAfterBar ? (
+                        <span className="absolute left-full z-10 ml-2 max-w-64 truncate whitespace-nowrap text-gray-700 dark:text-gray-200">
+                          {task.title}
+                        </span>
+                      ) : pos.w >= 96 ? (
                         <span className="relative z-10 truncate px-2">
                           {task.title}
                         </span>
-                      )}
+                      ) : null}
                     </button>
                   );
                 })}
 
-                {showDependencies && (
+                {showDependencies && dependenciesVisible && (
                   <svg
                     aria-hidden="true"
                     className="pointer-events-none absolute left-0 top-0"
-                    width={totalW}
+                    width={chartW}
                     height={items.length * ROW_H}
                   >
                     {items.flatMap((task) =>

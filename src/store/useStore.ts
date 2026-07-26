@@ -185,6 +185,9 @@ interface State {
   helpOpen: boolean;
   filters: TaskFilters;
   timelineZoom: TimelineZoom;
+  timelineLabelWidth: number;
+  timelineNamesAfterBar: boolean;
+  timelineShowDependencies: boolean;
   quickAddOpen: boolean;
 
   sidebarOpen: boolean;
@@ -205,6 +208,9 @@ interface State {
   setFilters: (f: Partial<TaskFilters>) => void;
   clearFilters: () => void;
   setTimelineZoom: (z: TimelineZoom) => void;
+  setTimelineLabelWidth: (width: number) => void;
+  setTimelineNamesAfterBar: (show: boolean) => void;
+  setTimelineShowDependencies: (show: boolean) => void;
   setQuickAddOpen: (open: boolean) => void;
   setSidebarOpen: (open: boolean) => void;
   setShowArchivedProjects: (show: boolean) => void;
@@ -346,6 +352,9 @@ export const useStore = create<State>()(
       helpOpen: false,
       filters: { ...DEFAULT_FILTERS },
       timelineZoom: "month",
+      timelineLabelWidth: 280,
+      timelineNamesAfterBar: false,
+      timelineShowDependencies: true,
       quickAddOpen: false,
 
       sidebarOpen: false,
@@ -376,6 +385,12 @@ export const useStore = create<State>()(
       setFilters: (f) => set((s) => ({ filters: { ...s.filters, ...f } })),
       clearFilters: () => set({ filters: { ...DEFAULT_FILTERS } }),
       setTimelineZoom: (z) => set({ timelineZoom: z }),
+      setTimelineLabelWidth: (width) =>
+        set({ timelineLabelWidth: Math.min(520, Math.max(220, width)) }),
+      setTimelineNamesAfterBar: (show) =>
+        set({ timelineNamesAfterBar: show }),
+      setTimelineShowDependencies: (show) =>
+        set({ timelineShowDependencies: show }),
       setQuickAddOpen: (open) => set({ quickAddOpen: open }),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
       setShowArchivedProjects: (show) => set({ showArchivedProjects: show }),
@@ -1274,6 +1289,9 @@ export const useStore = create<State>()(
           sections: s.sections ?? [],
           filters: s.filters ?? { ...DEFAULT_FILTERS },
           timelineZoom: s.timelineZoom ?? "month",
+          timelineLabelWidth: s.timelineLabelWidth ?? 280,
+          timelineNamesAfterBar: s.timelineNamesAfterBar ?? false,
+          timelineShowDependencies: s.timelineShowDependencies ?? true,
           projects: (s.projects ?? []).map((p) =>
             normalizeProject(p as Project & Record<string, unknown>)
           ),
@@ -1296,6 +1314,9 @@ export const useStore = create<State>()(
         leads: s.leads,
         theme: s.theme,
         timelineZoom: s.timelineZoom,
+        timelineLabelWidth: s.timelineLabelWidth,
+        timelineNamesAfterBar: s.timelineNamesAfterBar,
+        timelineShowDependencies: s.timelineShowDependencies,
       }),
     }
   )

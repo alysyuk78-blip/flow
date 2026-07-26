@@ -30,7 +30,6 @@ export function GlobalTimelineView() {
         <TimelineChart
           items={items}
           showCritical={false}
-          showDependencies={false}
         />
       </div>
     </div>

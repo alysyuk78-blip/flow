@@ -108,6 +108,10 @@ export function Sidebar() {
     return a.order - b.order;
   });
   const archivedCount = projects.filter((p) => p.archived).length;
+  const avalonPlanProject = projects.find(
+    (project) =>
+      project.name === "Кошики кондиціонерів — активний план лідів 30 днів"
+  );
   const sidebarHiddenForA11y = !sidebarOpen && !isDesktop;
 
   useEffect(() => {
@@ -134,13 +138,8 @@ export function Sidebar() {
   }
 
   function handleAvalonPlanImport() {
-    const alreadyImported = projects.some(
-      (project) =>
-        project.name === "Кошики кондиціонерів — активний план лідів 30 днів"
-    );
-    if (alreadyImported) {
+    if (avalonPlanProject) {
       importAvalonPlan();
-      alert("План AVALON уже є у Flow. Відкриваю його без створення дубля.");
       return;
     }
     if (
@@ -335,7 +334,10 @@ export function Sidebar() {
                   : "text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
               )}
             >
-              <Icon className="h-3.5 w-3.5" strokeWidth={1.5} />
+              <Icon
+                className="h-3.5 w-3.5"
+                strokeWidth={id === "dark" ? 1.1 : 1.5}
+              />
             </button>
           ))}
         </div>
@@ -649,17 +651,46 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t border-gray-200 px-3 py-2.5 dark:border-gray-800">
-        <button
-          type="button"
-          onClick={handleAvalonPlanImport}
-          className="mb-1 flex min-h-10 w-full items-center gap-2 rounded-lg px-2 text-left text-ios-footnote font-medium text-brand-600 hover:bg-brand-50 dark:text-brand-300 dark:hover:bg-brand-500/10"
-        >
-          <Sparkles className="h-4 w-4" />
-          <span className="flex-1">План AVALON</span>
-          <span className="text-ios-caption font-normal text-gray-400">
-            без заміни даних
-          </span>
-        </button>
+        <div className="group relative mb-1 flex items-center rounded-lg hover:bg-brand-50 focus-within:bg-brand-50 dark:hover:bg-brand-500/10 dark:focus-within:bg-brand-500/10">
+          <button
+            type="button"
+            onClick={handleAvalonPlanImport}
+            title={
+              avalonPlanProject
+                ? "Відкрити 30-денний робочий план просування кошиків кондиціонерів"
+                : "Додати готовий 30-денний план із задачами, чек-листами та текстами"
+            }
+            className="flex min-h-12 min-w-0 flex-1 items-center gap-2 rounded-lg px-2 text-left text-ios-footnote font-medium text-brand-600 dark:text-brand-300"
+          >
+            <Sparkles className="h-4 w-4 shrink-0" />
+            <span className="min-w-0 flex-1">
+              <span className="block">
+                {avalonPlanProject
+                  ? "Відкрити план AVALON"
+                  : "Додати план AVALON"}
+              </span>
+              <span className="block truncate text-ios-caption font-normal text-gray-400">
+                30 днів просування кошиків
+              </span>
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setHelpOpen(true)}
+            aria-label="Що таке План AVALON"
+            title="Що таке План AVALON"
+            className="mr-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-gray-400 hover:bg-white hover:text-brand-600 dark:hover:bg-gray-800"
+          >
+            <HelpCircle className="h-4 w-4" />
+          </button>
+          <div
+            role="tooltip"
+            className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 w-60 rounded-lg bg-gray-900 px-3 py-2 text-ios-caption font-normal leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 dark:bg-gray-700"
+          >
+            Готовий 30-денний план із 31 задачею, чек-листами та
+            текстами для просування кошиків. Інші дані не замінюються.
+          </div>
+        </div>
         <div className="flex flex-wrap items-center gap-1">
           <button
             onClick={exportBackup}
